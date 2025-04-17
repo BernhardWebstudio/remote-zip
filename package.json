@@ -3,15 +3,40 @@
   "private": false,
   "version": "0.0.1",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BernhardWebstudio/remote-zip.git"
+  },
+  "author": {
+    "name": "Tim Bernhard",
+    "email": "tim@bernhard-webstudio.ch",
+    "url": "https://bernhard-webstudio.ch"
+  },
+  "keywords": [
+    "zip",
+    "http",
+    "fetch",
+    "typescript"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*"
+  ],
   "devDependencies": {
     "@types/node": "^22.14.1",
+    "@types/pako": "^2.0.3",
+    "pako": "^2.1.0",
     "typescript": "~5.7.2",
     "vite": "^6.3.1",
     "vite-plugin-dts": "^4.5.3"
+  },
+  "dependencies": {
+    "@foxglove/crc": "^1.0.1"
   }
 }

@@ -27,10 +27,20 @@ document
           .join("\n") +
         "</ul>";
       document.querySelectorAll(".download-button").forEach((button) => {
-        button.addEventListener("click", (event) => {
+        button.addEventListener("click", async (event) => {
           const target = event.target as HTMLElement;
           const file = target.getAttribute("data-file") as string;
-          remoteZip!.downloadFile(file);
+          const objectURL = await remoteZip.getFileAsObjectURL(file);
+          // download the file
+          const link = document.createElement("a");
+          link.href = objectURL;
+          link.download = file.split("/").pop() || file;
+          link.click();
+          // invalidate the object-URL
+          setTimeout(() => {
+            link.remove();
+            URL.revokeObjectURL(objectURL);
+          }, 5000);
         });
       });
     });
