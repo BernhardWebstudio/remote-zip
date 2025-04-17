@@ -23,6 +23,7 @@ export default defineConfig({
         globals: {},
       },
     },
+    outDir: "dist",
   },
   plugins: [dts()],
 });

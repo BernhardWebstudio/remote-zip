@@ -1,33 +1,12 @@
 {
-  "name": "remote-zip",
-  "private": false,
-  "version": "0.0.1",
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BernhardWebstudio/remote-zip.git"
-  },
   "author": {
-    "name": "Tim Bernhard",
     "email": "tim@bernhard-webstudio.ch",
+    "name": "Tim Bernhard",
     "url": "https://bernhard-webstudio.ch"
   },
-  "keywords": [
-    "zip",
-    "http",
-    "fetch",
-    "typescript"
-  ],
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+  "dependencies": {
+    "@foxglove/crc": "^1.0.1"
   },
-  "files": [
-    "dist",
-    "!dist/**/*.test.*",
-    "!dist/**/*.spec.*"
-  ],
   "devDependencies": {
     "@types/node": "^22.14.1",
     "@types/pako": "^2.0.3",
@@ -36,7 +15,36 @@
     "vite": "^6.3.1",
     "vite-plugin-dts": "^4.5.3"
   },
-  "dependencies": {
-    "@foxglove/crc": "^1.0.1"
-  }
+  "exports": {
+    ".": {
+      "import": "./dist/my-lib.js",
+      "require": "./dist/my-lib.umd.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*"
+  ],
+  "keywords": [
+    "zip",
+    "http",
+    "fetch",
+    "typescript"
+  ],
+  "main": "./dist/my-lib.umd.cjs",
+  "module": "./dist/my-lib.js",
+  "name": "remote-zip",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BernhardWebstudio/remote-zip.git"
+  },
+  "scripts": {
+    "build": "tsc && vite build --config ./vite.config.lib.js && vite build --config ./vite.config.site.js",
+    "dev": "vite",
+    "preview": "vite preview"
+  },
+  "type": "module",
+  "version": "0.0.1"
 }
