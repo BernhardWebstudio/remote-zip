@@ -1,5 +1,6 @@
 import * as pako from "pako";
 import { crc32 } from "@foxglove/crc";
+import { mimeTypes } from "./mime-types";
 
 /**
  * RemoteZip - A TypeScript library for extracting individual files from .zip files over HTTP
@@ -136,6 +137,11 @@ export class RemoteZip {
     const fileInfo = this.files.get(filename);
     if (!fileInfo) {
       throw new Error(`File not found: ${filename}`);
+    }
+
+    const fileExtension = "." + (filename.split(".").pop() || "").toLowerCase();
+    if (fileExtension in mimeTypes && mimeType == "") {
+      mimeType = mimeTypes[fileExtension as keyof typeof mimeTypes];
     }
 
     console.log("File info:", fileInfo);
