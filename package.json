@@ -17,8 +17,8 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/my-lib.js",
-      "require": "./dist/my-lib.umd.cjs"
+      "import": "./dist/remote-zip.js",
+      "require": "./dist/remote-zip.umd.cjs"
     }
   },
   "files": [
@@ -32,8 +32,8 @@
     "fetch",
     "typescript"
   ],
-  "main": "./dist/my-lib.umd.cjs",
-  "module": "./dist/my-lib.js",
+  "main": "./dist/remote-zip.umd.cjs",
+  "module": "./dist/remote-zip.js",
   "name": "remote-zip",
   "private": false,
   "repository": {
@@ -46,5 +46,6 @@
     "preview": "vite preview"
   },
   "type": "module",
-  "version": "0.0.1"
+  "types": "./dist/lib/remote-zip.d.ts",
+  "version": "0.0.4"
 }
