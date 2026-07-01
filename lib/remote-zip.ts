@@ -221,7 +221,7 @@ export class RemoteZip {
       );
     }
 
-    const blob = new Blob([decompressedData], {
+    const blob = new Blob([decompressedData as Uint8Array<ArrayBuffer>], {
       type: mimeType || "application/octet-stream",
     });
     return URL.createObjectURL(blob);

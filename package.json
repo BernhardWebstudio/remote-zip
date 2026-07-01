@@ -13,7 +13,8 @@
     "pako": "^3.0.0",
     "typescript": "~6.0.3",
     "vite": "^8.1.2",
-    "vite-plugin-dts": "^5.0.3"
+    "vite-plugin-dts": "^5.0.3",
+    "vitest": "^4.1.9"
   },
   "exports": {
     ".": {
@@ -43,7 +44,8 @@
   "scripts": {
     "build": "tsc && vite build --config ./vite.config.lib.js && vite build --config ./vite.config.site.js",
     "dev": "vite",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "type": "module",
   "types": "./dist/lib/remote-zip.d.ts",
