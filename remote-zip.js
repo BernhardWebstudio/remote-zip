@@ -1,1394 +1,1366 @@
-var ot = Object.defineProperty;
-var st = (t, i, e) => i in t ? ot(t, i, { enumerable: !0, configurable: !0, writable: !0, value: e }) : t[i] = e;
-var T = (t, i, e) => st(t, typeof i != "symbol" ? i + "" : i, e);
+//#region \0vite/modulepreload-polyfill.js
 (function() {
-  const i = document.createElement("link").relList;
-  if (i && i.supports && i.supports("modulepreload"))
-    return;
-  for (const r of document.querySelectorAll('link[rel="modulepreload"]'))
-    a(r);
-  new MutationObserver((r) => {
-    for (const n of r)
-      if (n.type === "childList")
-        for (const c of n.addedNodes)
-          c.tagName === "LINK" && c.rel === "modulepreload" && a(c);
-  }).observe(document, { childList: !0, subtree: !0 });
-  function e(r) {
-    const n = {};
-    return r.integrity && (n.integrity = r.integrity), r.referrerPolicy && (n.referrerPolicy = r.referrerPolicy), r.crossOrigin === "use-credentials" ? n.credentials = "include" : r.crossOrigin === "anonymous" ? n.credentials = "omit" : n.credentials = "same-origin", n;
-  }
-  function a(r) {
-    if (r.ep)
-      return;
-    r.ep = !0;
-    const n = e(r);
-    fetch(r.href, n);
-  }
+	let e = document.createElement("link").relList;
+	if (e && e.supports && e.supports("modulepreload")) return;
+	for (let e of document.querySelectorAll("link[rel=\"modulepreload\"]")) n(e);
+	new MutationObserver((e) => {
+		for (let t of e) if (t.type === "childList") for (let e of t.addedNodes) e.tagName === "LINK" && e.rel === "modulepreload" && n(e);
+	}).observe(document, {
+		childList: !0,
+		subtree: !0
+	});
+	function t(e) {
+		let t = {};
+		return e.integrity && (t.integrity = e.integrity), e.referrerPolicy && (t.referrerPolicy = e.referrerPolicy), e.crossOrigin === "use-credentials" ? t.credentials = "include" : e.crossOrigin === "anonymous" ? t.credentials = "omit" : t.credentials = "same-origin", t;
+	}
+	function n(e) {
+		if (e.ep) return;
+		e.ep = !0;
+		let n = t(e);
+		fetch(e.href, n);
+	}
 })();
-function M(t) {
-  let i = t.length;
-  for (; --i >= 0; )
-    t[i] = 0;
+//#endregion
+//#region node_modules/pako/dist/pako.mjs
+var e = 4, t = 0, n = 1, r = 2;
+function i(e) {
+	let t = e.length;
+	for (; --t >= 0;) e[t] = 0;
 }
-const rt = 3, ft = 258, He = 29, lt = 256, ct = lt + 1 + He, Fe = 30, dt = 512, ht = new Array((ct + 2) * 2);
-M(ht);
-const ut = new Array(Fe * 2);
-M(ut);
-const wt = new Array(dt);
-M(wt);
-const pt = new Array(ft - rt + 1);
-M(pt);
-const gt = new Array(He);
-M(gt);
-const xt = new Array(Fe);
-M(xt);
-const bt = (t, i, e, a) => {
-  let r = t & 65535 | 0, n = t >>> 16 & 65535 | 0, c = 0;
-  for (; e !== 0; ) {
-    c = e > 2e3 ? 2e3 : e, e -= c;
-    do
-      r = r + i[a++] | 0, n = n + r | 0;
-    while (--c);
-    r %= 65521, n %= 65521;
-  }
-  return r | n << 16 | 0;
+var a = 0, o = 1, s = 2, c = 29, l = 256, u = 286, d = 30, f = 19, p = 573, m = 15, h = 16, g = 256, _ = 16, v = 17, y = 18, b = new Uint8Array([
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	1,
+	1,
+	1,
+	1,
+	2,
+	2,
+	2,
+	2,
+	3,
+	3,
+	3,
+	3,
+	4,
+	4,
+	4,
+	4,
+	5,
+	5,
+	5,
+	5,
+	0
+]), x = new Uint8Array([
+	0,
+	0,
+	0,
+	0,
+	1,
+	1,
+	2,
+	2,
+	3,
+	3,
+	4,
+	4,
+	5,
+	5,
+	6,
+	6,
+	7,
+	7,
+	8,
+	8,
+	9,
+	9,
+	10,
+	10,
+	11,
+	11,
+	12,
+	12,
+	13,
+	13
+]);
+new Uint8Array([
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	2,
+	3,
+	7
+]);
+var S = new Uint8Array([
+	16,
+	17,
+	18,
+	0,
+	8,
+	7,
+	9,
+	6,
+	10,
+	5,
+	11,
+	4,
+	12,
+	3,
+	13,
+	2,
+	14,
+	1,
+	15
+]), C = 512, w = Array(288 * 2);
+i(w);
+var T = Array(d * 2);
+i(T);
+var E = Array(C);
+i(E);
+var D = Array(256);
+i(D);
+var O = Array(c);
+i(O);
+var k = Array(d);
+i(k);
+var A = (e) => e < 256 ? E[e] : E[256 + (e >>> 7)], j = (e, t) => {
+	e.pending_buf[e.pending++] = t & 255, e.pending_buf[e.pending++] = t >>> 8 & 255;
+}, M = (e, t, n) => {
+	e.bi_valid > h - n ? (e.bi_buf |= t << e.bi_valid & 65535, j(e, e.bi_buf), e.bi_buf = t >> h - e.bi_valid, e.bi_valid += n - h) : (e.bi_buf |= t << e.bi_valid & 65535, e.bi_valid += n);
+}, N = (e, t, n) => {
+	M(e, n[t * 2], n[t * 2 + 1]);
+}, ee = (e, t) => {
+	let n = 0;
+	do
+		n |= e & 1, e >>>= 1, n <<= 1;
+	while (--t > 0);
+	return n >>> 1;
+}, te = (e, t) => {
+	let n = t.dyn_tree, r = t.max_code, i = t.stat_desc.static_tree, a = t.stat_desc.has_stree, o = t.stat_desc.extra_bits, s = t.stat_desc.extra_base, c = t.stat_desc.max_length, l, u, d, f, h, g, _ = 0;
+	for (f = 0; f <= m; f++) e.bl_count[f] = 0;
+	for (n[e.heap[e.heap_max] * 2 + 1] = 0, l = e.heap_max + 1; l < p; l++) u = e.heap[l], f = n[n[u * 2 + 1] * 2 + 1] + 1, f > c && (f = c, _++), n[u * 2 + 1] = f, !(u > r) && (e.bl_count[f]++, h = 0, u >= s && (h = o[u - s]), g = n[u * 2], e.opt_len += g * (f + h), a && (e.static_len += g * (i[u * 2 + 1] + h)));
+	if (_ !== 0) {
+		do {
+			for (f = c - 1; e.bl_count[f] === 0;) f--;
+			e.bl_count[f]--, e.bl_count[f + 1] += 2, e.bl_count[c]--, _ -= 2;
+		} while (_ > 0);
+		for (f = c; f !== 0; f--) for (u = e.bl_count[f]; u !== 0;) d = e.heap[--l], !(d > r) && (n[d * 2 + 1] !== f && (e.opt_len += (f - n[d * 2 + 1]) * n[d * 2], n[d * 2 + 1] = f), u--);
+	}
+}, ne = (e, t, n) => {
+	let r = Array(16), i = 0, a, o;
+	for (a = 1; a <= m; a++) i = i + n[a - 1] << 1, r[a] = i;
+	for (o = 0; o <= t; o++) {
+		let t = e[o * 2 + 1];
+		t !== 0 && (e[o * 2] = ee(r[t]++, t));
+	}
+}, re = (e) => {
+	let t;
+	for (t = 0; t < u; t++) e.dyn_ltree[t * 2] = 0;
+	for (t = 0; t < d; t++) e.dyn_dtree[t * 2] = 0;
+	for (t = 0; t < f; t++) e.bl_tree[t * 2] = 0;
+	e.dyn_ltree[g * 2] = 1, e.opt_len = e.static_len = 0, e.sym_next = e.matches = 0;
+}, ie = (e) => {
+	e.bi_valid > 8 ? j(e, e.bi_buf) : e.bi_valid > 0 && (e.pending_buf[e.pending++] = e.bi_buf), e.bi_buf = 0, e.bi_valid = 0;
+}, ae = (e, t, n, r) => {
+	let i = t * 2, a = n * 2;
+	return e[i] < e[a] || e[i] === e[a] && r[t] <= r[n];
+}, oe = (e, t, n) => {
+	let r = e.heap[n], i = n << 1;
+	for (; i <= e.heap_len && (i < e.heap_len && ae(t, e.heap[i + 1], e.heap[i], e.depth) && i++, !ae(t, r, e.heap[i], e.depth));) e.heap[n] = e.heap[i], n = i, i <<= 1;
+	e.heap[n] = r;
+}, se = (e, t, n) => {
+	let r, i, a = 0, o, s;
+	if (e.sym_next !== 0) do
+		r = e.pending_buf[e.sym_buf + a++] & 255, r += (e.pending_buf[e.sym_buf + a++] & 255) << 8, i = e.pending_buf[e.sym_buf + a++], r === 0 ? N(e, i, t) : (o = D[i], N(e, o + l + 1, t), s = b[o], s !== 0 && (i -= O[o], M(e, i, s)), r--, o = A(r), N(e, o, n), s = x[o], s !== 0 && (r -= k[o], M(e, r, s)));
+	while (a < e.sym_next);
+	N(e, g, t);
+}, ce = (e, t) => {
+	let n = t.dyn_tree, r = t.stat_desc.static_tree, i = t.stat_desc.has_stree, a = t.stat_desc.elems, o, s, c = -1, l;
+	for (e.heap_len = 0, e.heap_max = p, o = 0; o < a; o++) n[o * 2] === 0 ? n[o * 2 + 1] = 0 : (e.heap[++e.heap_len] = c = o, e.depth[o] = 0);
+	for (; e.heap_len < 2;) l = e.heap[++e.heap_len] = c < 2 ? ++c : 0, n[l * 2] = 1, e.depth[l] = 0, e.opt_len--, i && (e.static_len -= r[l * 2 + 1]);
+	for (t.max_code = c, o = e.heap_len >> 1; o >= 1; o--) oe(e, n, o);
+	l = a;
+	do
+		o = e.heap[1], e.heap[1] = e.heap[e.heap_len--], oe(e, n, 1), s = e.heap[1], e.heap[--e.heap_max] = o, e.heap[--e.heap_max] = s, n[l * 2] = n[o * 2] + n[s * 2], e.depth[l] = (e.depth[o] >= e.depth[s] ? e.depth[o] : e.depth[s]) + 1, n[o * 2 + 1] = n[s * 2 + 1] = l, e.heap[1] = l++, oe(e, n, 1);
+	while (e.heap_len >= 2);
+	e.heap[--e.heap_max] = e.heap[1], te(e, t), ne(n, c, e.bl_count);
+}, le = (e, t, n) => {
+	let r, i = -1, a, o = t[1], s = 0, c = 7, l = 4;
+	for (o === 0 && (c = 138, l = 3), t[(n + 1) * 2 + 1] = 65535, r = 0; r <= n; r++) a = o, o = t[(r + 1) * 2 + 1], !(++s < c && a === o) && (s < l ? e.bl_tree[a * 2] += s : a === 0 ? s <= 10 ? e.bl_tree[v * 2]++ : e.bl_tree[y * 2]++ : (a !== i && e.bl_tree[a * 2]++, e.bl_tree[_ * 2]++), s = 0, i = a, o === 0 ? (c = 138, l = 3) : a === o ? (c = 6, l = 3) : (c = 7, l = 4));
+}, ue = (e, t, n) => {
+	let r, i = -1, a, o = t[1], s = 0, c = 7, l = 4;
+	for (o === 0 && (c = 138, l = 3), r = 0; r <= n; r++) if (a = o, o = t[(r + 1) * 2 + 1], !(++s < c && a === o)) {
+		if (s < l) do
+			N(e, a, e.bl_tree);
+		while (--s !== 0);
+		else a === 0 ? s <= 10 ? (N(e, v, e.bl_tree), M(e, s - 3, 3)) : (N(e, y, e.bl_tree), M(e, s - 11, 7)) : (a !== i && (N(e, a, e.bl_tree), s--), N(e, _, e.bl_tree), M(e, s - 3, 2));
+		s = 0, i = a, o === 0 ? (c = 138, l = 3) : a === o ? (c = 6, l = 3) : (c = 7, l = 4);
+	}
+}, de = (e) => {
+	let t;
+	for (le(e, e.dyn_ltree, e.l_desc.max_code), le(e, e.dyn_dtree, e.d_desc.max_code), ce(e, e.bl_desc), t = f - 1; t >= 3 && e.bl_tree[S[t] * 2 + 1] === 0; t--);
+	return e.opt_len += 3 * (t + 1) + 5 + 5 + 4, t;
+}, fe = (e, t, n, r) => {
+	let i;
+	for (M(e, t - 257, 5), M(e, n - 1, 5), M(e, r - 4, 4), i = 0; i < r; i++) M(e, e.bl_tree[S[i] * 2 + 1], 3);
+	ue(e, e.dyn_ltree, t - 1), ue(e, e.dyn_dtree, n - 1);
+}, pe = (e) => {
+	let r = 4093624447, i;
+	for (i = 0; i <= 31; i++, r >>>= 1) if (r & 1 && e.dyn_ltree[i * 2] !== 0) return t;
+	if (e.dyn_ltree[18] !== 0 || e.dyn_ltree[20] !== 0 || e.dyn_ltree[26] !== 0) return n;
+	for (i = 32; i < l; i++) if (e.dyn_ltree[i * 2] !== 0) return n;
+	return t;
+}, me = (e, t, n, r) => {
+	M(e, (a << 1) + +!!r, 3), ie(e), j(e, n), j(e, ~n), n && e.pending_buf.set(e.window.subarray(t, t + n), e.pending), e.pending += n;
+}, he = (t, n, i, a) => {
+	let c, l, u = 0;
+	t.level > 0 ? (t.strm.data_type === r && (t.strm.data_type = pe(t)), ce(t, t.l_desc), ce(t, t.d_desc), u = de(t), c = t.opt_len + 3 + 7 >>> 3, l = t.static_len + 3 + 7 >>> 3, l <= c && (c = l)) : c = l = i + 5, i + 4 <= c && n !== -1 ? me(t, n, i, a) : t.strategy === e || l === c ? (M(t, (o << 1) + +!!a, 3), se(t, w, T)) : (M(t, (s << 1) + +!!a, 3), fe(t, t.l_desc.max_code + 1, t.d_desc.max_code + 1, u + 1), se(t, t.dyn_ltree, t.dyn_dtree)), re(t), a && ie(t);
+}, P = (e, t, n) => (e.pending_buf[e.sym_buf + e.sym_next++] = t, e.pending_buf[e.sym_buf + e.sym_next++] = t >> 8, e.pending_buf[e.sym_buf + e.sym_next++] = n, t === 0 ? e.dyn_ltree[n * 2]++ : (e.matches++, t--, e.dyn_ltree[(D[n] + l + 1) * 2]++, e.dyn_dtree[A(t) * 2]++), e.sym_next === e.sym_end), F = (e, t, n, r) => {
+	let i = e & 65535 | 0, a = e >>> 16 & 65535 | 0, o = 0;
+	for (; n !== 0;) {
+		o = n > 2e3 ? 2e3 : n, n -= o;
+		do
+			i = i + t[r++] | 0, a = a + i | 0;
+		while (--o);
+		i %= 65521, a %= 65521;
+	}
+	return i | a << 16 | 0;
+}, ge = new Uint32Array((() => {
+	let e, t = [];
+	for (var n = 0; n < 256; n++) {
+		e = n;
+		for (var r = 0; r < 8; r++) e = e & 1 ? 3988292384 ^ e >>> 1 : e >>> 1;
+		t[n] = e;
+	}
+	return t;
+})()), I = (e, t, n, r) => {
+	let i = ge, a = r + n;
+	e ^= -1;
+	for (let n = r; n < a; n++) e = e >>> 8 ^ i[(e ^ t[n]) & 255];
+	return e ^ -1;
+}, _e = {
+	2: "need dictionary",
+	1: "stream end",
+	0: "",
+	"-1": "file error",
+	"-2": "stream error",
+	"-3": "data error",
+	"-4": "insufficient memory",
+	"-5": "buffer error",
+	"-6": "incompatible version"
+}, L = 3, ve = 258, R = 262, z = 1, ye = 2, be = 3, xe = 4, Se = (e) => {
+	let t, n, r, i = e.w_size;
+	t = e.hash_size, r = t;
+	do
+		n = e.head[--r], e.head[r] = n >= i ? n - i : 0;
+	while (--t);
+	t = i, r = t;
+	do
+		n = e.prev[--r], e.prev[r] = n >= i ? n - i : 0;
+	while (--t);
+}, Ce = (e, t, n) => (t << e.hash_shift ^ n) & e.hash_mask, B = (e, t) => {
+	let n;
+	if (e.legacy_hash) n = e.ins_h = Ce(e, e.ins_h, e.window[t + L - 1]);
+	else {
+		let r = e.window, i = r[t] | r[t + 1] << 8 | r[t + 2] << 16 | r[t + 3] << 24;
+		n = e.ins_h = Math.imul(i, 66521) + 66521 >>> 16 & e.hash_mask;
+	}
+	let r = e.prev[t & e.w_mask] = e.head[n];
+	return e.head[n] = t, r;
+}, we = (e) => {
+	let t = e.state, n = t.pending;
+	n > e.avail_out && (n = e.avail_out), n !== 0 && (e.output.set(t.pending_buf.subarray(t.pending_out, t.pending_out + n), e.next_out), e.next_out += n, t.pending_out += n, e.total_out += n, e.avail_out -= n, t.pending -= n, t.pending === 0 && (t.pending_out = 0));
+}, V = (e, t) => {
+	he(e, e.block_start >= 0 ? e.block_start : -1, e.strstart - e.block_start, t), e.block_start = e.strstart, we(e.strm);
+}, Te = (e, t, n, r) => {
+	let i = e.avail_in;
+	return i > r && (i = r), i === 0 ? 0 : (e.avail_in -= i, t.set(e.input.subarray(e.next_in, e.next_in + i), n), e.state.wrap === 1 ? e.adler = F(e.adler, t, i, n) : e.state.wrap === 2 && (e.adler = I(e.adler, t, i, n)), e.next_in += i, e.total_in += i, i);
+}, Ee = (e, t) => {
+	let n = e.max_chain_length, r = e.strstart, i, a, o = e.prev_length, s = e.nice_match, c = e.strstart > e.w_size - R ? e.strstart - (e.w_size - R) : 0, l = e.window, u = e.w_mask, d = e.prev, f = e.strstart + ve, p = l[r + o - 1], m = l[r + o];
+	e.prev_length >= e.good_match && (n >>= 2), s > e.lookahead && (s = e.lookahead);
+	do {
+		if (i = t, l[i + o] !== m || l[i + o - 1] !== p || l[i] !== l[r] || l[++i] !== l[r + 1]) continue;
+		r += 2, i++;
+		do		;
+while (l[++r] === l[++i] && l[++r] === l[++i] && l[++r] === l[++i] && l[++r] === l[++i] && l[++r] === l[++i] && l[++r] === l[++i] && l[++r] === l[++i] && l[++r] === l[++i] && r < f);
+		if (a = ve - (f - r), r = f - ve, a > o) {
+			if (e.match_start = t, o = a, a >= s) break;
+			p = l[r + o - 1], m = l[r + o];
+		}
+	} while ((t = d[t & u]) > c && --n !== 0);
+	return o <= e.lookahead ? o : e.lookahead;
+}, De = (e) => {
+	let t = e.w_size, n, r, i;
+	do {
+		if (r = e.window_size - e.lookahead - e.strstart, e.strstart >= t + (t - R) && (e.window.set(e.window.subarray(t, t + t - r), 0), e.match_start -= t, e.strstart -= t, e.block_start -= t, e.insert > e.strstart && (e.insert = e.strstart), Se(e), r += t), e.strm.avail_in === 0) break;
+		if (n = Te(e.strm, e.window, e.strstart + e.lookahead, r), e.lookahead += n, !e.legacy_hash) {
+			if (e.lookahead + e.insert > L) for (i = e.strstart - e.insert; e.insert && (B(e, i), i++, e.insert--, !(e.lookahead + e.insert <= L)););
+		} else if (e.lookahead + e.insert >= L) for (i = e.strstart - e.insert, e.ins_h = e.window[i], e.ins_h = Ce(e, e.ins_h, e.window[i + 1]); e.insert && (B(e, i), i++, e.insert--, !(e.lookahead + e.insert < L)););
+	} while (e.lookahead < R && e.strm.avail_in !== 0);
+}, Oe = (e, t) => {
+	let n = e.pending_buf_size - 5 > e.w_size ? e.w_size : e.pending_buf_size - 5, r, i, a, o = 0, s = e.strm.avail_in;
+	do {
+		if (r = 65535, a = e.bi_valid + 42 >> 3, e.strm.avail_out < a || (a = e.strm.avail_out - a, i = e.strstart - e.block_start, r > i + e.strm.avail_in && (r = i + e.strm.avail_in), r > a && (r = a), r < n && (r === 0 && t !== 4 || t === 0 || r !== i + e.strm.avail_in))) break;
+		o = +(t === 4 && r === i + e.strm.avail_in), me(e, 0, 0, o), e.pending_buf[e.pending - 4] = r, e.pending_buf[e.pending - 3] = r >> 8, e.pending_buf[e.pending - 2] = ~r, e.pending_buf[e.pending - 1] = ~r >> 8, we(e.strm), i && (i > r && (i = r), e.strm.output.set(e.window.subarray(e.block_start, e.block_start + i), e.strm.next_out), e.strm.next_out += i, e.strm.avail_out -= i, e.strm.total_out += i, e.block_start += i, r -= i), r && (Te(e.strm, e.strm.output, e.strm.next_out, r), e.strm.next_out += r, e.strm.avail_out -= r, e.strm.total_out += r);
+	} while (o === 0);
+	return s -= e.strm.avail_in, s && (s >= e.w_size ? (e.matches = 2, e.window.set(e.strm.input.subarray(e.strm.next_in - e.w_size, e.strm.next_in), 0), e.strstart = e.w_size, e.insert = e.strstart) : (e.window_size - e.strstart <= s && (e.strstart -= e.w_size, e.window.set(e.window.subarray(e.w_size, e.w_size + e.strstart), 0), e.matches < 2 && e.matches++, e.insert > e.strstart && (e.insert = e.strstart)), e.window.set(e.strm.input.subarray(e.strm.next_in - s, e.strm.next_in), e.strstart), e.strstart += s, e.insert += s > e.w_size - e.insert ? e.w_size - e.insert : s), e.block_start = e.strstart), e.high_water < e.strstart && (e.high_water = e.strstart), o ? xe : t !== 0 && t !== 4 && e.strm.avail_in === 0 && e.strstart === e.block_start ? ye : (a = e.window_size - e.strstart, e.strm.avail_in > a && e.block_start >= e.w_size && (e.block_start -= e.w_size, e.strstart -= e.w_size, e.window.set(e.window.subarray(e.w_size, e.w_size + e.strstart), 0), e.matches < 2 && e.matches++, a += e.w_size, e.insert > e.strstart && (e.insert = e.strstart)), a > e.strm.avail_in && (a = e.strm.avail_in), a && (Te(e.strm, e.window, e.strstart, a), e.strstart += a, e.insert += a > e.w_size - e.insert ? e.w_size - e.insert : a), e.high_water < e.strstart && (e.high_water = e.strstart), a = e.bi_valid + 42 >> 3, a = e.pending_buf_size - a > 65535 ? 65535 : e.pending_buf_size - a, n = a > e.w_size ? e.w_size : a, i = e.strstart - e.block_start, (i >= n || (i || t === 4) && t !== 0 && e.strm.avail_in === 0 && i <= a) && (r = i > a ? a : i, o = +(t === 4 && e.strm.avail_in === 0 && r === i), me(e, e.block_start, r, o), e.block_start += r, we(e.strm)), o ? be : z);
+}, ke = (e, t) => {
+	let n, r;
+	for (;;) {
+		if (e.lookahead < R) {
+			if (De(e), e.lookahead < R && t === 0) return z;
+			if (e.lookahead === 0) break;
+		}
+		if (n = 0, e.lookahead >= L && (n = B(e, e.strstart)), n !== 0 && e.strstart - n <= e.w_size - R && (e.match_length = Ee(e, n)), e.match_length >= L) if (r = P(e, e.strstart - e.match_start, e.match_length - L), e.lookahead -= e.match_length, e.match_length <= e.max_lazy_match && e.lookahead >= L) {
+			e.match_length--;
+			do
+				e.strstart++, n = B(e, e.strstart);
+			while (--e.match_length !== 0);
+			e.strstart++;
+		} else e.strstart += e.match_length, e.match_length = 0, e.legacy_hash && (e.ins_h = e.window[e.strstart], e.ins_h = Ce(e, e.ins_h, e.window[e.strstart + 1]));
+		else r = P(e, 0, e.window[e.strstart]), e.lookahead--, e.strstart++;
+		if (r && (V(e, !1), e.strm.avail_out === 0)) return z;
+	}
+	return e.insert = e.strstart < L - 1 ? e.strstart : L - 1, t === 4 ? (V(e, !0), e.strm.avail_out === 0 ? be : xe) : e.sym_next && (V(e, !1), e.strm.avail_out === 0) ? z : ye;
+}, H = (e, t) => {
+	let n, r, i;
+	for (;;) {
+		if (e.lookahead < R) {
+			if (De(e), e.lookahead < R && t === 0) return z;
+			if (e.lookahead === 0) break;
+		}
+		if (n = 0, e.lookahead >= L && (n = B(e, e.strstart)), e.prev_length = e.match_length, e.prev_match = e.match_start, e.match_length = L - 1, n !== 0 && e.prev_length < e.max_lazy_match && e.strstart - n <= e.w_size - R && (e.match_length = Ee(e, n), e.match_length <= 5 && (e.strategy === 1 || e.match_length === L && e.strstart - e.match_start > 4096) && (e.match_length = L - 1)), e.prev_length >= L && e.match_length <= e.prev_length) {
+			i = e.strstart + e.lookahead - L, r = P(e, e.strstart - 1 - e.prev_match, e.prev_length - L), e.lookahead -= e.prev_length - 1, e.prev_length -= 2;
+			do
+				++e.strstart <= i && (n = B(e, e.strstart));
+			while (--e.prev_length !== 0);
+			if (e.match_available = 0, e.match_length = L - 1, e.strstart++, r && (V(e, !1), e.strm.avail_out === 0)) return z;
+		} else if (e.match_available) {
+			if (r = P(e, 0, e.window[e.strstart - 1]), r && V(e, !1), e.strstart++, e.lookahead--, e.strm.avail_out === 0) return z;
+		} else e.match_available = 1, e.strstart++, e.lookahead--;
+	}
+	return e.match_available &&= (r = P(e, 0, e.window[e.strstart - 1]), 0), e.insert = e.strstart < L - 1 ? e.strstart : L - 1, t === 4 ? (V(e, !0), e.strm.avail_out === 0 ? be : xe) : e.sym_next && (V(e, !1), e.strm.avail_out === 0) ? z : ye;
+}, U = class {
+	constructor(e, t, n, r, i) {
+		this.good_length = e, this.max_lazy = t, this.nice_length = n, this.max_chain = r, this.func = i;
+	}
 };
-var re = bt;
-const _t = () => {
-  let t, i = [];
-  for (var e = 0; e < 256; e++) {
-    t = e;
-    for (var a = 0; a < 8; a++)
-      t = t & 1 ? 3988292384 ^ t >>> 1 : t >>> 1;
-    i[e] = t;
-  }
-  return i;
-}, mt = new Uint32Array(_t()), vt = (t, i, e, a) => {
-  const r = mt, n = a + e;
-  t ^= -1;
-  for (let c = a; c < n; c++)
-    t = t >>> 8 ^ r[(t ^ i[c]) & 255];
-  return t ^ -1;
-};
-var z = vt, fe = {
-  2: "need dictionary",
-  /* Z_NEED_DICT       2  */
-  1: "stream end",
-  /* Z_STREAM_END      1  */
-  0: "",
-  /* Z_OK              0  */
-  "-1": "file error",
-  /* Z_ERRNO         (-1) */
-  "-2": "stream error",
-  /* Z_STREAM_ERROR  (-2) */
-  "-3": "data error",
-  /* Z_DATA_ERROR    (-3) */
-  "-4": "insufficient memory",
-  /* Z_MEM_ERROR     (-4) */
-  "-5": "buffer error",
-  /* Z_BUF_ERROR     (-5) */
-  "-6": "incompatible version"
-  /* Z_VERSION_ERROR (-6) */
-}, Pe = {
-  /* Allowed flush values; see deflate() and inflate() below for details */
-  Z_NO_FLUSH: 0,
-  Z_FINISH: 4,
-  Z_BLOCK: 5,
-  Z_TREES: 6,
-  /* Return codes for the compression/decompression functions. Negative values
-  * are errors, positive values are used for special but normal events.
-  */
-  Z_OK: 0,
-  Z_STREAM_END: 1,
-  Z_NEED_DICT: 2,
-  Z_STREAM_ERROR: -2,
-  Z_DATA_ERROR: -3,
-  Z_MEM_ERROR: -4,
-  Z_BUF_ERROR: -5,
-  /* The deflate compression method */
-  Z_DEFLATED: 8
-  //Z_NULL:                 null // Use -1 or null inline, depending on var type
-};
-const kt = (t, i) => Object.prototype.hasOwnProperty.call(t, i);
-var yt = function(t) {
-  const i = Array.prototype.slice.call(arguments, 1);
-  for (; i.length; ) {
-    const e = i.shift();
-    if (e) {
-      if (typeof e != "object")
-        throw new TypeError(e + "must be non-object");
-      for (const a in e)
-        kt(e, a) && (t[a] = e[a]);
-    }
-  }
-  return t;
-}, Et = (t) => {
-  let i = 0;
-  for (let a = 0, r = t.length; a < r; a++)
-    i += t[a].length;
-  const e = new Uint8Array(i);
-  for (let a = 0, r = 0, n = t.length; a < n; a++) {
-    let c = t[a];
-    e.set(c, r), r += c.length;
-  }
-  return e;
-}, Ge = {
-  assign: yt,
-  flattenChunks: Et
-};
-let Ke = !0;
-try {
-  String.fromCharCode.apply(null, new Uint8Array(1));
-} catch {
-  Ke = !1;
+new U(0, 0, 0, 0, Oe), new U(4, 4, 8, 4, ke), new U(4, 5, 16, 8, ke), new U(4, 6, 32, 32, ke), new U(4, 4, 16, 16, H), new U(8, 16, 32, 32, H), new U(8, 16, 128, 128, H), new U(8, 32, 128, 256, H), new U(32, 128, 258, 1024, H), new U(32, 258, 258, 4096, H);
+var W = 16209, Ae = 16191;
+function je(e, t) {
+	let n, r, i, a, o, s, c, l, u, d, f, p, m, h, g, _, v, y, b, x, S, C, w, T, E = e.state;
+	n = e.next_in, w = e.input, r = n + (e.avail_in - 5), i = e.next_out, T = e.output, a = i - (t - e.avail_out), o = i + (e.avail_out - 257), s = E.dmax, c = E.wsize, l = E.whave, u = E.wnext, d = E.window, f = E.hold, p = E.bits, m = E.lencode, h = E.distcode, g = (1 << E.lenbits) - 1, _ = (1 << E.distbits) - 1;
+	top: do {
+		p < 15 && (f += w[n++] << p, p += 8, f += w[n++] << p, p += 8), v = m[f & g];
+		dolen: for (;;) {
+			if (y = v >>> 24, f >>>= y, p -= y, y = v >>> 16 & 255, y === 0) T[i++] = v & 65535;
+			else if (y & 16) {
+				b = v & 65535, y &= 15, y && (p < y && (f += w[n++] << p, p += 8), b += f & (1 << y) - 1, f >>>= y, p -= y), p < 15 && (f += w[n++] << p, p += 8, f += w[n++] << p, p += 8), v = h[f & _];
+				dodist: for (;;) {
+					if (y = v >>> 24, f >>>= y, p -= y, y = v >>> 16 & 255, y & 16) {
+						if (x = v & 65535, y &= 15, p < y && (f += w[n++] << p, p += 8, p < y && (f += w[n++] << p, p += 8)), x += f & (1 << y) - 1, x > s) {
+							e.msg = "invalid distance too far back", E.mode = W;
+							break top;
+						}
+						if (f >>>= y, p -= y, y = i - a, x > y) {
+							if (y = x - y, y > l && E.sane) {
+								e.msg = "invalid distance too far back", E.mode = W;
+								break top;
+							}
+							if (S = 0, C = d, u === 0) {
+								if (S += c - y, y < b) {
+									b -= y;
+									do
+										T[i++] = d[S++];
+									while (--y);
+									S = i - x, C = T;
+								}
+							} else if (u < y) {
+								if (S += c + u - y, y -= u, y < b) {
+									b -= y;
+									do
+										T[i++] = d[S++];
+									while (--y);
+									if (S = 0, u < b) {
+										y = u, b -= y;
+										do
+											T[i++] = d[S++];
+										while (--y);
+										S = i - x, C = T;
+									}
+								}
+							} else if (S += u - y, y < b) {
+								b -= y;
+								do
+									T[i++] = d[S++];
+								while (--y);
+								S = i - x, C = T;
+							}
+							for (; b > 2;) T[i++] = C[S++], T[i++] = C[S++], T[i++] = C[S++], b -= 3;
+							b && (T[i++] = C[S++], b > 1 && (T[i++] = C[S++]));
+						} else {
+							S = i - x;
+							do
+								T[i++] = T[S++], T[i++] = T[S++], T[i++] = T[S++], b -= 3;
+							while (b > 2);
+							b && (T[i++] = T[S++], b > 1 && (T[i++] = T[S++]));
+						}
+					} else if (y & 64) {
+						e.msg = "invalid distance code", E.mode = W;
+						break top;
+					} else {
+						v = h[(v & 65535) + (f & (1 << y) - 1)];
+						continue dodist;
+					}
+					break;
+				}
+			} else if (!(y & 64)) {
+				v = m[(v & 65535) + (f & (1 << y) - 1)];
+				continue dolen;
+			} else if (y & 32) {
+				E.mode = Ae;
+				break top;
+			} else {
+				e.msg = "invalid literal/length code", E.mode = W;
+				break top;
+			}
+			break;
+		}
+	} while (n < r && i < o);
+	b = p >> 3, n -= b, p -= b << 3, f &= (1 << p) - 1, e.next_in = n, e.next_out = i, e.avail_in = n < r ? 5 + (r - n) : 5 - (n - r), e.avail_out = i < o ? 257 + (o - i) : 257 - (i - o), E.hold = f, E.bits = p;
 }
-const B = new Uint8Array(256);
-for (let t = 0; t < 256; t++)
-  B[t] = t >= 252 ? 6 : t >= 248 ? 5 : t >= 240 ? 4 : t >= 224 ? 3 : t >= 192 ? 2 : 1;
-B[254] = B[254] = 1;
-var Rt = (t) => {
-  if (typeof TextEncoder == "function" && TextEncoder.prototype.encode)
-    return new TextEncoder().encode(t);
-  let i, e, a, r, n, c = t.length, f = 0;
-  for (r = 0; r < c; r++)
-    e = t.charCodeAt(r), (e & 64512) === 55296 && r + 1 < c && (a = t.charCodeAt(r + 1), (a & 64512) === 56320 && (e = 65536 + (e - 55296 << 10) + (a - 56320), r++)), f += e < 128 ? 1 : e < 2048 ? 2 : e < 65536 ? 3 : 4;
-  for (i = new Uint8Array(f), n = 0, r = 0; n < f; r++)
-    e = t.charCodeAt(r), (e & 64512) === 55296 && r + 1 < c && (a = t.charCodeAt(r + 1), (a & 64512) === 56320 && (e = 65536 + (e - 55296 << 10) + (a - 56320), r++)), e < 128 ? i[n++] = e : e < 2048 ? (i[n++] = 192 | e >>> 6, i[n++] = 128 | e & 63) : e < 65536 ? (i[n++] = 224 | e >>> 12, i[n++] = 128 | e >>> 6 & 63, i[n++] = 128 | e & 63) : (i[n++] = 240 | e >>> 18, i[n++] = 128 | e >>> 12 & 63, i[n++] = 128 | e >>> 6 & 63, i[n++] = 128 | e & 63);
-  return i;
+var G = 15, Me = 852, Ne = 592, Pe = 0, Fe = 1, Ie = 2, Le = new Uint16Array([
+	3,
+	4,
+	5,
+	6,
+	7,
+	8,
+	9,
+	10,
+	11,
+	13,
+	15,
+	17,
+	19,
+	23,
+	27,
+	31,
+	35,
+	43,
+	51,
+	59,
+	67,
+	83,
+	99,
+	115,
+	131,
+	163,
+	195,
+	227,
+	258,
+	0,
+	0
+]), Re = new Uint8Array([
+	16,
+	16,
+	16,
+	16,
+	16,
+	16,
+	16,
+	16,
+	17,
+	17,
+	17,
+	17,
+	18,
+	18,
+	18,
+	18,
+	19,
+	19,
+	19,
+	19,
+	20,
+	20,
+	20,
+	20,
+	21,
+	21,
+	21,
+	21,
+	16,
+	199,
+	75
+]), ze = new Uint16Array([
+	1,
+	2,
+	3,
+	4,
+	5,
+	7,
+	9,
+	13,
+	17,
+	25,
+	33,
+	49,
+	65,
+	97,
+	129,
+	193,
+	257,
+	385,
+	513,
+	769,
+	1025,
+	1537,
+	2049,
+	3073,
+	4097,
+	6145,
+	8193,
+	12289,
+	16385,
+	24577,
+	0,
+	0
+]), Be = new Uint8Array([
+	16,
+	16,
+	16,
+	16,
+	17,
+	17,
+	18,
+	18,
+	19,
+	19,
+	20,
+	20,
+	21,
+	21,
+	22,
+	22,
+	23,
+	23,
+	24,
+	24,
+	25,
+	25,
+	26,
+	26,
+	27,
+	27,
+	28,
+	28,
+	29,
+	29,
+	64,
+	64
+]), K = (e, t, n, r, i, a, o, s) => {
+	let c = s.bits, l = 0, u = 0, d = 0, f = 0, p = 0, m = 0, h = 0, g = 0, _ = 0, v = 0, y, b, x, S, C, w = null, T, E = /* @__PURE__ */ new Uint16Array(16), D = /* @__PURE__ */ new Uint16Array(16), O = null, k, A, j;
+	for (l = 0; l <= G; l++) E[l] = 0;
+	for (u = 0; u < r; u++) E[t[n + u]]++;
+	for (p = c, f = G; f >= 1 && E[f] === 0; f--);
+	if (p > f && (p = f), f === 0) return i[a++] = 20971520, i[a++] = 20971520, s.bits = 1, 0;
+	for (d = 1; d < f && E[d] === 0; d++);
+	for (p < d && (p = d), g = 1, l = 1; l <= G; l++) if (g <<= 1, g -= E[l], g < 0) return -1;
+	if (g > 0 && (e === Pe || f !== 1)) return -1;
+	for (D[1] = 0, l = 1; l < G; l++) D[l + 1] = D[l] + E[l];
+	for (u = 0; u < r; u++) t[n + u] !== 0 && (o[D[t[n + u]]++] = u);
+	if (e === Pe ? (w = O = o, T = 20) : e === Fe ? (w = Le, O = Re, T = 257) : (w = ze, O = Be, T = 0), v = 0, u = 0, l = d, C = a, m = p, h = 0, x = -1, _ = 1 << p, S = _ - 1, e === Fe && _ > Me || e === Ie && _ > Ne) return 1;
+	for (;;) {
+		k = l - h, o[u] + 1 < T ? (A = 0, j = o[u]) : o[u] >= T ? (A = O[o[u] - T], j = w[o[u] - T]) : (A = 96, j = 0), y = 1 << l - h, b = 1 << m, d = b;
+		do
+			b -= y, i[C + (v >> h) + b] = k << 24 | A << 16 | j | 0;
+		while (b !== 0);
+		for (y = 1 << l - 1; v & y;) y >>= 1;
+		if (y === 0 ? v = 0 : (v &= y - 1, v += y), u++, --E[l] === 0) {
+			if (l === f) break;
+			l = t[n + o[u]];
+		}
+		if (l > p && (v & S) !== x) {
+			for (h === 0 && (h = p), C += d, m = l - h, g = 1 << m; m + h < f && (g -= E[m + h], !(g <= 0));) m++, g <<= 1;
+			if (_ += 1 << m, e === Fe && _ > Me || e === Ie && _ > Ne) return 1;
+			x = v & S, i[x] = p << 24 | m << 16 | C - a | 0;
+		}
+	}
+	return v !== 0 && (i[C + v] = l - h << 24 | 4194304), s.bits = p, 0;
+}, Ve = 0, He = 1, Ue = 2, q = 16180, We = 16181, Ge = 16182, Ke = 16183, qe = 16184, Je = 16185, Ye = 16186, Xe = 16187, Ze = 16188, Qe = 16189, J = 16190, Y = 16191, $e = 16192, et = 16193, tt = 16194, nt = 16195, rt = 16196, it = 16197, at = 16198, X = 16199, ot = 16200, st = 16201, ct = 16202, lt = 16203, ut = 16204, dt = 16205, ft = 16206, pt = 16207, mt = 16208, Z = 16209, ht = 16210, gt = 16211, _t = 852, vt = 592, yt = (e) => (e >>> 24 & 255) + (e >>> 8 & 65280) + ((e & 65280) << 8) + ((e & 255) << 24), bt = class {
+	constructor() {
+		this.strm = null, this.mode = 0, this.last = !1, this.wrap = 0, this.havedict = !1, this.flags = 0, this.dmax = 0, this.check = 0, this.total = 0, this.head = null, this.wbits = 0, this.wsize = 0, this.whave = 0, this.wnext = 0, this.window = null, this.hold = 0, this.bits = 0, this.length = 0, this.offset = 0, this.extra = 0, this.lencode = null, this.distcode = null, this.lenbits = 0, this.distbits = 0, this.ncode = 0, this.nlen = 0, this.ndist = 0, this.have = 0, this.next = null, this.lens = /* @__PURE__ */ new Uint16Array(320), this.work = /* @__PURE__ */ new Uint16Array(288), this.lendyn = null, this.distdyn = null, this.sane = 0, this.back = 0, this.was = 0;
+	}
+}, Q = (e) => {
+	if (!e) return 1;
+	let t = e.state;
+	return +(!t || t.strm !== e || t.mode < q || t.mode > gt);
+}, xt = (e) => {
+	if (Q(e)) return -2;
+	let t = e.state;
+	return e.total_in = e.total_out = t.total = 0, e.msg = "", t.wrap && (e.adler = t.wrap & 1), t.mode = q, t.last = 0, t.havedict = 0, t.flags = -1, t.dmax = 32768, t.head = null, t.hold = 0, t.bits = 0, t.lencode = t.lendyn = new Int32Array(_t), t.distcode = t.distdyn = new Int32Array(vt), t.sane = 1, t.back = -1, 0;
+}, St = (e) => {
+	if (Q(e)) return -2;
+	let t = e.state;
+	return t.wsize = 0, t.whave = 0, t.wnext = 0, xt(e);
+}, Ct = (e, t) => {
+	let n;
+	if (Q(e)) return -2;
+	let r = e.state;
+	return t < 0 ? (n = 0, t = -t) : (n = (t >> 4) + 5, t < 48 && (t &= 15)), t && (t < 8 || t > 15) ? -2 : (r.window !== null && r.wbits !== t && (r.window = null), r.wrap = n, r.wbits = t, St(e));
+}, wt = (e, t) => {
+	if (!e) return -2;
+	let n = new bt();
+	e.state = n, n.strm = e, n.window = null, n.mode = q;
+	let r = Ct(e, t);
+	return r !== 0 && (e.state = null), r;
+}, Tt = !0, Et, Dt, Ot = (e) => {
+	if (Tt) {
+		Et = /* @__PURE__ */ new Int32Array(512), Dt = /* @__PURE__ */ new Int32Array(32);
+		let t = 0;
+		for (; t < 144;) e.lens[t++] = 8;
+		for (; t < 256;) e.lens[t++] = 9;
+		for (; t < 280;) e.lens[t++] = 7;
+		for (; t < 288;) e.lens[t++] = 8;
+		for (K(He, e.lens, 0, 288, Et, 0, e.work, { bits: 9 }), t = 0; t < 32;) e.lens[t++] = 5;
+		K(Ue, e.lens, 0, 32, Dt, 0, e.work, { bits: 5 }), Tt = !1;
+	}
+	e.lencode = Et, e.lenbits = 9, e.distcode = Dt, e.distbits = 5;
+}, kt = (e, t, n, r) => {
+	let i, a = e.state;
+	return a.window === null && (a.window = new Uint8Array(1 << a.wbits)), a.wsize === 0 && (a.wsize = 1 << a.wbits, a.wnext = 0, a.whave = 0), r >= a.wsize ? (a.window.set(t.subarray(n - a.wsize, n), 0), a.wnext = 0, a.whave = a.wsize) : (i = a.wsize - a.wnext, i > r && (i = r), a.window.set(t.subarray(n - r, n - r + i), a.wnext), r -= i, r ? (a.window.set(t.subarray(n - r, n), 0), a.wnext = r, a.whave = a.wsize) : (a.wnext += i, a.wnext === a.wsize && (a.wnext = 0), a.whave < a.wsize && (a.whave += i))), 0;
+}, At = (e, t) => {
+	let n, r, i, a, o, s, c, l, u, d, f, p, m, h, g = 0, _, v, y, b, x, S, C, w, T = /* @__PURE__ */ new Uint8Array(4), E, D, O = new Uint8Array([
+		16,
+		17,
+		18,
+		0,
+		8,
+		7,
+		9,
+		6,
+		10,
+		5,
+		11,
+		4,
+		12,
+		3,
+		13,
+		2,
+		14,
+		1,
+		15
+	]);
+	if (Q(e) || !e.output || !e.input && e.avail_in !== 0) return -2;
+	n = e.state, n.mode === Y && (n.mode = $e), o = e.next_out, i = e.output, c = e.avail_out, a = e.next_in, r = e.input, s = e.avail_in, l = n.hold, u = n.bits, d = s, f = c, w = 0;
+	inf_leave: for (;;) switch (n.mode) {
+		case q:
+			if (n.wrap === 0) {
+				n.mode = $e;
+				break;
+			}
+			for (; u < 16;) {
+				if (s === 0) break inf_leave;
+				s--, l += r[a++] << u, u += 8;
+			}
+			if (n.wrap & 2 && l === 35615) {
+				n.wbits === 0 && (n.wbits = 15), n.check = 0, T[0] = l & 255, T[1] = l >>> 8 & 255, n.check = I(n.check, T, 2, 0), l = 0, u = 0, n.mode = We;
+				break;
+			}
+			if (n.head && (n.head.done = !1), !(n.wrap & 1) || (((l & 255) << 8) + (l >> 8)) % 31) {
+				e.msg = "incorrect header check", n.mode = Z;
+				break;
+			}
+			if ((l & 15) != 8) {
+				e.msg = "unknown compression method", n.mode = Z;
+				break;
+			}
+			if (l >>>= 4, u -= 4, C = (l & 15) + 8, n.wbits === 0 && (n.wbits = C), C > 15 || C > n.wbits) {
+				e.msg = "invalid window size", n.mode = Z;
+				break;
+			}
+			n.dmax = 1 << n.wbits, n.flags = 0, e.adler = n.check = 1, n.mode = l & 512 ? Qe : Y, l = 0, u = 0;
+			break;
+		case We:
+			for (; u < 16;) {
+				if (s === 0) break inf_leave;
+				s--, l += r[a++] << u, u += 8;
+			}
+			if (n.flags = l, (n.flags & 255) != 8) {
+				e.msg = "unknown compression method", n.mode = Z;
+				break;
+			}
+			if (n.flags & 57344) {
+				e.msg = "unknown header flags set", n.mode = Z;
+				break;
+			}
+			n.head && (n.head.text = l >> 8 & 1), n.flags & 512 && n.wrap & 4 && (T[0] = l & 255, T[1] = l >>> 8 & 255, n.check = I(n.check, T, 2, 0)), l = 0, u = 0, n.mode = Ge;
+		case Ge:
+			for (; u < 32;) {
+				if (s === 0) break inf_leave;
+				s--, l += r[a++] << u, u += 8;
+			}
+			n.head && (n.head.time = l), n.flags & 512 && n.wrap & 4 && (T[0] = l & 255, T[1] = l >>> 8 & 255, T[2] = l >>> 16 & 255, T[3] = l >>> 24 & 255, n.check = I(n.check, T, 4, 0)), l = 0, u = 0, n.mode = Ke;
+		case Ke:
+			for (; u < 16;) {
+				if (s === 0) break inf_leave;
+				s--, l += r[a++] << u, u += 8;
+			}
+			n.head && (n.head.xflags = l & 255, n.head.os = l >> 8), n.flags & 512 && n.wrap & 4 && (T[0] = l & 255, T[1] = l >>> 8 & 255, n.check = I(n.check, T, 2, 0)), l = 0, u = 0, n.mode = qe;
+		case qe:
+			if (n.flags & 1024) {
+				for (; u < 16;) {
+					if (s === 0) break inf_leave;
+					s--, l += r[a++] << u, u += 8;
+				}
+				n.length = l, n.head && (n.head.extra_len = l), n.flags & 512 && n.wrap & 4 && (T[0] = l & 255, T[1] = l >>> 8 & 255, n.check = I(n.check, T, 2, 0)), l = 0, u = 0;
+			} else n.head && (n.head.extra = null);
+			n.mode = Je;
+		case Je:
+			if (n.flags & 1024 && (p = n.length, p > s && (p = s), p && (n.head && (C = n.head.extra_len - n.length, n.head.extra || (n.head.extra = new Uint8Array(n.head.extra_len)), n.head.extra.set(r.subarray(a, a + p), C)), n.flags & 512 && n.wrap & 4 && (n.check = I(n.check, r, p, a)), s -= p, a += p, n.length -= p), n.length)) break inf_leave;
+			n.length = 0, n.mode = Ye;
+		case Ye:
+			if (n.flags & 2048) {
+				if (s === 0) break inf_leave;
+				p = 0;
+				do
+					C = r[a + p++], n.head && C && n.length < 65536 && (n.head.name += String.fromCharCode(C));
+				while (C && p < s);
+				if (n.flags & 512 && n.wrap & 4 && (n.check = I(n.check, r, p, a)), s -= p, a += p, C) break inf_leave;
+			} else n.head && (n.head.name = null);
+			n.length = 0, n.mode = Xe;
+		case Xe:
+			if (n.flags & 4096) {
+				if (s === 0) break inf_leave;
+				p = 0;
+				do
+					C = r[a + p++], n.head && C && n.length < 65536 && (n.head.comment += String.fromCharCode(C));
+				while (C && p < s);
+				if (n.flags & 512 && n.wrap & 4 && (n.check = I(n.check, r, p, a)), s -= p, a += p, C) break inf_leave;
+			} else n.head && (n.head.comment = null);
+			n.mode = Ze;
+		case Ze:
+			if (n.flags & 512) {
+				for (; u < 16;) {
+					if (s === 0) break inf_leave;
+					s--, l += r[a++] << u, u += 8;
+				}
+				if (n.wrap & 4 && l !== (n.check & 65535)) {
+					e.msg = "header crc mismatch", n.mode = Z;
+					break;
+				}
+				l = 0, u = 0;
+			}
+			n.head && (n.head.hcrc = n.flags >> 9 & 1, n.head.done = !0), e.adler = n.check = 0, n.mode = Y;
+			break;
+		case Qe:
+			for (; u < 32;) {
+				if (s === 0) break inf_leave;
+				s--, l += r[a++] << u, u += 8;
+			}
+			e.adler = n.check = yt(l), l = 0, u = 0, n.mode = J;
+		case J:
+			if (n.havedict === 0) return e.next_out = o, e.avail_out = c, e.next_in = a, e.avail_in = s, n.hold = l, n.bits = u, 2;
+			e.adler = n.check = 1, n.mode = Y;
+		case Y: if (t === 5 || t === 6) break inf_leave;
+		case $e:
+			if (n.last) {
+				l >>>= u & 7, u -= u & 7, n.mode = ft;
+				break;
+			}
+			for (; u < 3;) {
+				if (s === 0) break inf_leave;
+				s--, l += r[a++] << u, u += 8;
+			}
+			switch (n.last = l & 1, l >>>= 1, --u, l & 3) {
+				case 0:
+					n.mode = et;
+					break;
+				case 1:
+					if (Ot(n), n.mode = X, t === 6) {
+						l >>>= 2, u -= 2;
+						break inf_leave;
+					}
+					break;
+				case 2:
+					n.mode = rt;
+					break;
+				case 3: e.msg = "invalid block type", n.mode = Z;
+			}
+			l >>>= 2, u -= 2;
+			break;
+		case et:
+			for (l >>>= u & 7, u -= u & 7; u < 32;) {
+				if (s === 0) break inf_leave;
+				s--, l += r[a++] << u, u += 8;
+			}
+			if ((l & 65535) != (l >>> 16 ^ 65535)) {
+				e.msg = "invalid stored block lengths", n.mode = Z;
+				break;
+			}
+			if (n.length = l & 65535, l = 0, u = 0, n.mode = tt, t === 6) break inf_leave;
+		case tt: n.mode = nt;
+		case nt:
+			if (p = n.length, p) {
+				if (p > s && (p = s), p > c && (p = c), p === 0) break inf_leave;
+				i.set(r.subarray(a, a + p), o), s -= p, a += p, c -= p, o += p, n.length -= p;
+				break;
+			}
+			n.mode = Y;
+			break;
+		case rt:
+			for (; u < 14;) {
+				if (s === 0) break inf_leave;
+				s--, l += r[a++] << u, u += 8;
+			}
+			if (n.nlen = (l & 31) + 257, l >>>= 5, u -= 5, n.ndist = (l & 31) + 1, l >>>= 5, u -= 5, n.ncode = (l & 15) + 4, l >>>= 4, u -= 4, n.nlen > 286 || n.ndist > 30) {
+				e.msg = "too many length or distance symbols", n.mode = Z;
+				break;
+			}
+			n.have = 0, n.mode = it;
+		case it:
+			for (; n.have < n.ncode;) {
+				for (; u < 3;) {
+					if (s === 0) break inf_leave;
+					s--, l += r[a++] << u, u += 8;
+				}
+				n.lens[O[n.have++]] = l & 7, l >>>= 3, u -= 3;
+			}
+			for (; n.have < 19;) n.lens[O[n.have++]] = 0;
+			if (n.lencode = n.lendyn, n.lenbits = 7, E = { bits: n.lenbits }, w = K(Ve, n.lens, 0, 19, n.lencode, 0, n.work, E), n.lenbits = E.bits, w) {
+				e.msg = "invalid code lengths set", n.mode = Z;
+				break;
+			}
+			n.have = 0, n.mode = at;
+		case at:
+			for (; n.have < n.nlen + n.ndist;) {
+				for (; g = n.lencode[l & (1 << n.lenbits) - 1], _ = g >>> 24, v = g >>> 16 & 255, y = g & 65535, !(_ <= u);) {
+					if (s === 0) break inf_leave;
+					s--, l += r[a++] << u, u += 8;
+				}
+				if (y < 16) l >>>= _, u -= _, n.lens[n.have++] = y;
+				else {
+					if (y === 16) {
+						for (D = _ + 2; u < D;) {
+							if (s === 0) break inf_leave;
+							s--, l += r[a++] << u, u += 8;
+						}
+						if (l >>>= _, u -= _, n.have === 0) {
+							e.msg = "invalid bit length repeat", n.mode = Z;
+							break;
+						}
+						C = n.lens[n.have - 1], p = 3 + (l & 3), l >>>= 2, u -= 2;
+					} else if (y === 17) {
+						for (D = _ + 3; u < D;) {
+							if (s === 0) break inf_leave;
+							s--, l += r[a++] << u, u += 8;
+						}
+						l >>>= _, u -= _, C = 0, p = 3 + (l & 7), l >>>= 3, u -= 3;
+					} else {
+						for (D = _ + 7; u < D;) {
+							if (s === 0) break inf_leave;
+							s--, l += r[a++] << u, u += 8;
+						}
+						l >>>= _, u -= _, C = 0, p = 11 + (l & 127), l >>>= 7, u -= 7;
+					}
+					if (n.have + p > n.nlen + n.ndist) {
+						e.msg = "invalid bit length repeat", n.mode = Z;
+						break;
+					}
+					for (; p--;) n.lens[n.have++] = C;
+				}
+			}
+			if (n.mode === Z) break;
+			if (n.lens[256] === 0) {
+				e.msg = "invalid code -- missing end-of-block", n.mode = Z;
+				break;
+			}
+			if (n.lenbits = 9, E = { bits: n.lenbits }, w = K(He, n.lens, 0, n.nlen, n.lencode, 0, n.work, E), n.lenbits = E.bits, w) {
+				e.msg = "invalid literal/lengths set", n.mode = Z;
+				break;
+			}
+			if (n.distbits = 6, n.distcode = n.distdyn, E = { bits: n.distbits }, w = K(Ue, n.lens, n.nlen, n.ndist, n.distcode, 0, n.work, E), n.distbits = E.bits, w) {
+				e.msg = "invalid distances set", n.mode = Z;
+				break;
+			}
+			if (n.mode = X, t === 6) break inf_leave;
+		case X: n.mode = ot;
+		case ot:
+			if (s >= 6 && c >= 258) {
+				e.next_out = o, e.avail_out = c, e.next_in = a, e.avail_in = s, n.hold = l, n.bits = u, je(e, f), o = e.next_out, i = e.output, c = e.avail_out, a = e.next_in, r = e.input, s = e.avail_in, l = n.hold, u = n.bits, n.mode === Y && (n.back = -1);
+				break;
+			}
+			for (n.back = 0; g = n.lencode[l & (1 << n.lenbits) - 1], _ = g >>> 24, v = g >>> 16 & 255, y = g & 65535, !(_ <= u);) {
+				if (s === 0) break inf_leave;
+				s--, l += r[a++] << u, u += 8;
+			}
+			if (v && !(v & 240)) {
+				for (b = _, x = v, S = y; g = n.lencode[S + ((l & (1 << b + x) - 1) >> b)], _ = g >>> 24, v = g >>> 16 & 255, y = g & 65535, !(b + _ <= u);) {
+					if (s === 0) break inf_leave;
+					s--, l += r[a++] << u, u += 8;
+				}
+				l >>>= b, u -= b, n.back += b;
+			}
+			if (l >>>= _, u -= _, n.back += _, n.length = y, v === 0) {
+				n.mode = dt;
+				break;
+			}
+			if (v & 32) {
+				n.back = -1, n.mode = Y;
+				break;
+			}
+			if (v & 64) {
+				e.msg = "invalid literal/length code", n.mode = Z;
+				break;
+			}
+			n.extra = v & 15, n.mode = st;
+		case st:
+			if (n.extra) {
+				for (D = n.extra; u < D;) {
+					if (s === 0) break inf_leave;
+					s--, l += r[a++] << u, u += 8;
+				}
+				n.length += l & (1 << n.extra) - 1, l >>>= n.extra, u -= n.extra, n.back += n.extra;
+			}
+			n.was = n.length, n.mode = ct;
+		case ct:
+			for (; g = n.distcode[l & (1 << n.distbits) - 1], _ = g >>> 24, v = g >>> 16 & 255, y = g & 65535, !(_ <= u);) {
+				if (s === 0) break inf_leave;
+				s--, l += r[a++] << u, u += 8;
+			}
+			if (!(v & 240)) {
+				for (b = _, x = v, S = y; g = n.distcode[S + ((l & (1 << b + x) - 1) >> b)], _ = g >>> 24, v = g >>> 16 & 255, y = g & 65535, !(b + _ <= u);) {
+					if (s === 0) break inf_leave;
+					s--, l += r[a++] << u, u += 8;
+				}
+				l >>>= b, u -= b, n.back += b;
+			}
+			if (l >>>= _, u -= _, n.back += _, v & 64) {
+				e.msg = "invalid distance code", n.mode = Z;
+				break;
+			}
+			n.offset = y, n.extra = v & 15, n.mode = lt;
+		case lt:
+			if (n.extra) {
+				for (D = n.extra; u < D;) {
+					if (s === 0) break inf_leave;
+					s--, l += r[a++] << u, u += 8;
+				}
+				n.offset += l & (1 << n.extra) - 1, l >>>= n.extra, u -= n.extra, n.back += n.extra;
+			}
+			if (n.offset > n.dmax) {
+				e.msg = "invalid distance too far back", n.mode = Z;
+				break;
+			}
+			n.mode = ut;
+		case ut:
+			if (c === 0) break inf_leave;
+			if (p = f - c, n.offset > p) {
+				if (p = n.offset - p, p > n.whave && n.sane) {
+					e.msg = "invalid distance too far back", n.mode = Z;
+					break;
+				}
+				p > n.wnext ? (p -= n.wnext, m = n.wsize - p) : m = n.wnext - p, p > n.length && (p = n.length), h = n.window;
+			} else h = i, m = o - n.offset, p = n.length;
+			p > c && (p = c), c -= p, n.length -= p;
+			do
+				i[o++] = h[m++];
+			while (--p);
+			n.length === 0 && (n.mode = ot);
+			break;
+		case dt:
+			if (c === 0) break inf_leave;
+			i[o++] = n.length, c--, n.mode = ot;
+			break;
+		case ft:
+			if (n.wrap) {
+				for (; u < 32;) {
+					if (s === 0) break inf_leave;
+					s--, l |= r[a++] << u, u += 8;
+				}
+				if (f -= c, e.total_out += f, n.total += f, n.wrap & 4 && f && (e.adler = n.check = n.flags ? I(n.check, i, f, o - f) : F(n.check, i, f, o - f)), f = c, n.wrap & 4 && (n.flags ? l : yt(l)) !== n.check) {
+					e.msg = "incorrect data check", n.mode = Z;
+					break;
+				}
+				l = 0, u = 0;
+			}
+			n.mode = pt;
+		case pt:
+			if (n.wrap && n.flags) {
+				for (; u < 32;) {
+					if (s === 0) break inf_leave;
+					s--, l += r[a++] << u, u += 8;
+				}
+				if (n.wrap & 4 && l !== (n.total & 4294967295)) {
+					e.msg = "incorrect length check", n.mode = Z;
+					break;
+				}
+				l = 0, u = 0;
+			}
+			n.mode = mt;
+		case mt:
+			w = 1;
+			break inf_leave;
+		case Z:
+			w = -3;
+			break inf_leave;
+		case ht: return -4;
+		case gt:
+		default: return -2;
+	}
+	return e.next_out = o, e.avail_out = c, e.next_in = a, e.avail_in = s, n.hold = l, n.bits = u, (n.wsize || f !== e.avail_out && n.mode < Z && (n.mode < ft || t !== 4)) && kt(e, e.output, e.next_out, f - e.avail_out) ? (n.mode = ht, -4) : (d -= e.avail_in, f -= e.avail_out, e.total_in += d, e.total_out += f, n.total += f, n.wrap & 4 && f && (e.adler = n.check = n.flags ? I(n.check, i, f, e.next_out - f) : F(n.check, i, f, e.next_out - f)), e.data_type = n.bits + (n.last ? 64 : 0) + (n.mode === Y ? 128 : 0) + (n.mode === X || n.mode === tt ? 256 : 0), (d === 0 && f === 0 || t === 4) && w === 0 && (w = -5), w);
+}, jt = (e) => {
+	if (Q(e)) return -2;
+	let t = e.state;
+	return t.window &&= null, e.state = null, 0;
+}, Mt = (e, t) => {
+	let n = t.length, r, i, a;
+	return Q(e) || (r = e.state, r.wrap !== 0 && r.mode !== J) ? -2 : r.mode === J && (i = 1, i = F(i, t, n, 0), i !== r.check) ? -3 : (a = kt(e, t, n, n), a ? (r.mode = ht, -4) : (r.havedict = 1, 0));
+}, Nt = class {
+	constructor() {
+		this.input = null, this.next_in = 0, this.avail_in = 0, this.total_in = 0, this.output = null, this.next_out = 0, this.avail_out = 0, this.total_out = 0, this.msg = "", this.state = null, this.data_type = 2, this.adler = 0;
+	}
+}, Pt = (e) => {
+	let t = new Uint8Array(e.reduce((e, t) => e + t.length, 0)), n = 0;
+	for (let r of e) t.set(r, n), n += r.length;
+	return t;
+}, Ft = Object.prototype.toString, It = {
+	chunkSize: 1024 * 64,
+	windowBits: 15,
+	raw: !1,
+	dictionary: /* @__PURE__ */ new Uint8Array()
+}, Lt = class {
+	options;
+	err;
+	msg;
+	ended;
+	started;
+	chunks;
+	strm;
+	result;
+	constructor(e = {}) {
+		this.options = Object.assign({}, It, e);
+		let t = this.options;
+		t.raw && t.windowBits >= 0 && t.windowBits < 16 && (t.windowBits = -t.windowBits, t.windowBits === 0 && (t.windowBits = -15)), t.windowBits >= 0 && t.windowBits < 16 && !e.windowBits && (t.windowBits += 32), t.windowBits > 15 && t.windowBits < 48 && (t.windowBits & 15 || (t.windowBits |= 15)), this.err = 0, this.msg = "", this.ended = !1, this.started = !1, this.chunks = [], this.result = /* @__PURE__ */ new Uint8Array(), this.strm = new Nt(), this.strm.avail_out = 0;
+		let n = wt(this.strm, t.windowBits);
+		if (n !== 0) throw Error(_e[n]);
+		Ft.call(t.dictionary) === "[object ArrayBuffer]" && (t.dictionary = new Uint8Array(t.dictionary));
+		let r = t.dictionary;
+		if (t.raw && r.length && (n = Mt(this.strm, r), n !== 0)) throw Error(_e[n]);
+	}
+	push(e, t = !1) {
+		let n = this.strm, r = this.options.chunkSize, i, a, o;
+		if (this.ended) return this.err === 0;
+		for (a = typeof t == "number" ? t : t === !0 ? 4 : 0, Ft.call(e) === "[object ArrayBuffer]" ? n.input = new Uint8Array(e) : n.input = e, n.next_in = 0, n.avail_in = n.input.length, this.started || (this.started = !0, this.onStart(n));;) {
+			if (n.avail_out === 0 && (n.output = new Uint8Array(r), n.next_out = 0, n.avail_out = r), i = At(n, a), i === 2) {
+				let e = this.options.dictionary;
+				e.length && (i = Mt(n, e), i === 0 ? i = At(n, a) : i === -3 && (i = 2));
+			}
+			for (; n.avail_in > 0 && i === 1 && n.state.wrap & 2 && n.state.flags !== 0 && n.input[n.next_in] !== 0;) St(n), i = At(n, a);
+			if (i === -2 || i === -3 || i === 2 || i === -4) break;
+			if (o = n.avail_out, n.next_out && (n.avail_out === 0 || i === 1 || a > 0) && (this.onData(n.output.length === n.next_out ? n.output : n.output.subarray(0, n.next_out)), n.avail_out = 0, n.next_out = 0), !((i === 0 || i === -5) && o === 0)) {
+				if (i === 1) {
+					i = jt(this.strm);
+					break;
+				}
+				if (n.avail_in === 0) {
+					if (a === 4) {
+						i = jt(this.strm), i === 0 && (i = -5);
+						break;
+					}
+					return !0;
+				}
+			}
+		}
+		return this.err = i, this.msg = n.msg || _e[i], this.ended = !0, this.onEnd(i), i === 0;
+	}
+	onStart(e) {}
+	onData(e) {
+		this.chunks.push(e);
+	}
+	onEnd(e) {
+		e === 0 && (this.result = Pt(this.chunks)), this.chunks = [];
+	}
 };
-const At = (t, i) => {
-  if (i < 65534 && t.subarray && Ke)
-    return String.fromCharCode.apply(null, t.length === i ? t : t.subarray(0, i));
-  let e = "";
-  for (let a = 0; a < i; a++)
-    e += String.fromCharCode(t[a]);
-  return e;
-};
-var St = (t, i) => {
-  const e = i || t.length;
-  if (typeof TextDecoder == "function" && TextDecoder.prototype.decode)
-    return new TextDecoder().decode(t.subarray(0, i));
-  let a, r;
-  const n = new Array(e * 2);
-  for (r = 0, a = 0; a < e; ) {
-    let c = t[a++];
-    if (c < 128) {
-      n[r++] = c;
-      continue;
-    }
-    let f = B[c];
-    if (f > 4) {
-      n[r++] = 65533, a += f - 1;
-      continue;
-    }
-    for (c &= f === 2 ? 31 : f === 3 ? 15 : 7; f > 1 && a < e; )
-      c = c << 6 | t[a++] & 63, f--;
-    if (f > 1) {
-      n[r++] = 65533;
-      continue;
-    }
-    c < 65536 ? n[r++] = c : (c -= 65536, n[r++] = 55296 | c >> 10 & 1023, n[r++] = 56320 | c & 1023);
-  }
-  return At(n, r);
-}, Dt = (t, i) => {
-  i = i || t.length, i > t.length && (i = t.length);
-  let e = i - 1;
-  for (; e >= 0 && (t[e] & 192) === 128; )
-    e--;
-  return e < 0 || e === 0 ? i : e + B[t[e]] > i ? e : i;
-}, le = {
-  string2buf: Rt,
-  buf2string: St,
-  utf8border: Dt
-};
-function Tt() {
-  this.input = null, this.next_in = 0, this.avail_in = 0, this.total_in = 0, this.output = null, this.next_out = 0, this.avail_out = 0, this.total_out = 0, this.msg = "", this.state = null, this.data_type = 2, this.adler = 0;
+function Rt(e, t = {}) {
+	let n = new Lt(t);
+	if (n.push(e, !0), n.err) throw Error(n.msg);
+	let r = n.result;
+	return t.toText ? new TextDecoder().decode(r) : r;
 }
-var Ut = Tt;
-const G = 16209, zt = 16191;
-var Ct = function(i, e) {
-  let a, r, n, c, f, u, o, s, E, w, l, p, S, b, x, y, _, d, k, D, h, R, v, g;
-  const m = i.state;
-  a = i.next_in, v = i.input, r = a + (i.avail_in - 5), n = i.next_out, g = i.output, c = n - (e - i.avail_out), f = n + (i.avail_out - 257), u = m.dmax, o = m.wsize, s = m.whave, E = m.wnext, w = m.window, l = m.hold, p = m.bits, S = m.lencode, b = m.distcode, x = (1 << m.lenbits) - 1, y = (1 << m.distbits) - 1;
-  e:
-    do {
-      p < 15 && (l += v[a++] << p, p += 8, l += v[a++] << p, p += 8), _ = S[l & x];
-      t:
-        for (; ; ) {
-          if (d = _ >>> 24, l >>>= d, p -= d, d = _ >>> 16 & 255, d === 0)
-            g[n++] = _ & 65535;
-          else if (d & 16) {
-            k = _ & 65535, d &= 15, d && (p < d && (l += v[a++] << p, p += 8), k += l & (1 << d) - 1, l >>>= d, p -= d), p < 15 && (l += v[a++] << p, p += 8, l += v[a++] << p, p += 8), _ = b[l & y];
-            i:
-              for (; ; ) {
-                if (d = _ >>> 24, l >>>= d, p -= d, d = _ >>> 16 & 255, d & 16) {
-                  if (D = _ & 65535, d &= 15, p < d && (l += v[a++] << p, p += 8, p < d && (l += v[a++] << p, p += 8)), D += l & (1 << d) - 1, D > u) {
-                    i.msg = "invalid distance too far back", m.mode = G;
-                    break e;
-                  }
-                  if (l >>>= d, p -= d, d = n - c, D > d) {
-                    if (d = D - d, d > s && m.sane) {
-                      i.msg = "invalid distance too far back", m.mode = G;
-                      break e;
-                    }
-                    if (h = 0, R = w, E === 0) {
-                      if (h += o - d, d < k) {
-                        k -= d;
-                        do
-                          g[n++] = w[h++];
-                        while (--d);
-                        h = n - D, R = g;
-                      }
-                    } else if (E < d) {
-                      if (h += o + E - d, d -= E, d < k) {
-                        k -= d;
-                        do
-                          g[n++] = w[h++];
-                        while (--d);
-                        if (h = 0, E < k) {
-                          d = E, k -= d;
-                          do
-                            g[n++] = w[h++];
-                          while (--d);
-                          h = n - D, R = g;
-                        }
-                      }
-                    } else if (h += E - d, d < k) {
-                      k -= d;
-                      do
-                        g[n++] = w[h++];
-                      while (--d);
-                      h = n - D, R = g;
-                    }
-                    for (; k > 2; )
-                      g[n++] = R[h++], g[n++] = R[h++], g[n++] = R[h++], k -= 3;
-                    k && (g[n++] = R[h++], k > 1 && (g[n++] = R[h++]));
-                  } else {
-                    h = n - D;
-                    do
-                      g[n++] = g[h++], g[n++] = g[h++], g[n++] = g[h++], k -= 3;
-                    while (k > 2);
-                    k && (g[n++] = g[h++], k > 1 && (g[n++] = g[h++]));
-                  }
-                } else if ((d & 64) === 0) {
-                  _ = b[(_ & 65535) + (l & (1 << d) - 1)];
-                  continue i;
-                } else {
-                  i.msg = "invalid distance code", m.mode = G;
-                  break e;
-                }
-                break;
-              }
-          } else if ((d & 64) === 0) {
-            _ = S[(_ & 65535) + (l & (1 << d) - 1)];
-            continue t;
-          } else if (d & 32) {
-            m.mode = zt;
-            break e;
-          } else {
-            i.msg = "invalid literal/length code", m.mode = G;
-            break e;
-          }
-          break;
-        }
-    } while (a < r && n < f);
-  k = p >> 3, a -= k, p -= k << 3, l &= (1 << p) - 1, i.next_in = a, i.next_out = n, i.avail_in = a < r ? 5 + (r - a) : 5 - (a - r), i.avail_out = n < f ? 257 + (f - n) : 257 - (n - f), m.hold = l, m.bits = p;
-};
-const $ = 15, de = 852, he = 592, ue = 0, J = 1, we = 2, Ot = new Uint16Array([
-  /* Length codes 257..285 base */
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  13,
-  15,
-  17,
-  19,
-  23,
-  27,
-  31,
-  35,
-  43,
-  51,
-  59,
-  67,
-  83,
-  99,
-  115,
-  131,
-  163,
-  195,
-  227,
-  258,
-  0,
-  0
-]), Lt = new Uint8Array([
-  /* Length codes 257..285 extra */
-  16,
-  16,
-  16,
-  16,
-  16,
-  16,
-  16,
-  16,
-  17,
-  17,
-  17,
-  17,
-  18,
-  18,
-  18,
-  18,
-  19,
-  19,
-  19,
-  19,
-  20,
-  20,
-  20,
-  20,
-  21,
-  21,
-  21,
-  21,
-  16,
-  72,
-  78
-]), It = new Uint16Array([
-  /* Distance codes 0..29 base */
-  1,
-  2,
-  3,
-  4,
-  5,
-  7,
-  9,
-  13,
-  17,
-  25,
-  33,
-  49,
-  65,
-  97,
-  129,
-  193,
-  257,
-  385,
-  513,
-  769,
-  1025,
-  1537,
-  2049,
-  3073,
-  4097,
-  6145,
-  8193,
-  12289,
-  16385,
-  24577,
-  0,
-  0
-]), Nt = new Uint8Array([
-  /* Distance codes 0..29 extra */
-  16,
-  16,
-  16,
-  16,
-  17,
-  17,
-  18,
-  18,
-  19,
-  19,
-  20,
-  20,
-  21,
-  21,
-  22,
-  22,
-  23,
-  23,
-  24,
-  24,
-  25,
-  25,
-  26,
-  26,
-  27,
-  27,
-  28,
-  28,
-  29,
-  29,
-  64,
-  64
-]), Zt = (t, i, e, a, r, n, c, f) => {
-  const u = f.bits;
-  let o = 0, s = 0, E = 0, w = 0, l = 0, p = 0, S = 0, b = 0, x = 0, y = 0, _, d, k, D, h, R = null, v;
-  const g = new Uint16Array($ + 1), m = new Uint16Array($ + 1);
-  let I = null, ce, F, P;
-  for (o = 0; o <= $; o++)
-    g[o] = 0;
-  for (s = 0; s < a; s++)
-    g[i[e + s]]++;
-  for (l = u, w = $; w >= 1 && g[w] === 0; w--)
-    ;
-  if (l > w && (l = w), w === 0)
-    return r[n++] = 1 << 24 | 64 << 16 | 0, r[n++] = 1 << 24 | 64 << 16 | 0, f.bits = 1, 0;
-  for (E = 1; E < w && g[E] === 0; E++)
-    ;
-  for (l < E && (l = E), b = 1, o = 1; o <= $; o++)
-    if (b <<= 1, b -= g[o], b < 0)
-      return -1;
-  if (b > 0 && (t === ue || w !== 1))
-    return -1;
-  for (m[1] = 0, o = 1; o < $; o++)
-    m[o + 1] = m[o] + g[o];
-  for (s = 0; s < a; s++)
-    i[e + s] !== 0 && (c[m[i[e + s]]++] = s);
-  if (t === ue ? (R = I = c, v = 20) : t === J ? (R = Ot, I = Lt, v = 257) : (R = It, I = Nt, v = 0), y = 0, s = 0, o = E, h = n, p = l, S = 0, k = -1, x = 1 << l, D = x - 1, t === J && x > de || t === we && x > he)
-    return 1;
-  for (; ; ) {
-    ce = o - S, c[s] + 1 < v ? (F = 0, P = c[s]) : c[s] >= v ? (F = I[c[s] - v], P = R[c[s] - v]) : (F = 96, P = 0), _ = 1 << o - S, d = 1 << p, E = d;
-    do
-      d -= _, r[h + (y >> S) + d] = ce << 24 | F << 16 | P | 0;
-    while (d !== 0);
-    for (_ = 1 << o - 1; y & _; )
-      _ >>= 1;
-    if (_ !== 0 ? (y &= _ - 1, y += _) : y = 0, s++, --g[o] === 0) {
-      if (o === w)
-        break;
-      o = i[e + c[s]];
-    }
-    if (o > l && (y & D) !== k) {
-      for (S === 0 && (S = l), h += E, p = o - S, b = 1 << p; p + S < w && (b -= g[p + S], !(b <= 0)); )
-        p++, b <<= 1;
-      if (x += 1 << p, t === J && x > de || t === we && x > he)
-        return 1;
-      k = y & D, r[k] = l << 24 | p << 16 | h - n | 0;
-    }
-  }
-  return y !== 0 && (r[h + y] = o - S << 24 | 64 << 16 | 0), f.bits = l, 0;
-};
-var j = Zt;
-const $t = 0, Ve = 1, Xe = 2, {
-  Z_FINISH: pe,
-  Z_BLOCK: Mt,
-  Z_TREES: K,
-  Z_OK: N,
-  Z_STREAM_END: jt,
-  Z_NEED_DICT: Bt,
-  Z_STREAM_ERROR: U,
-  Z_DATA_ERROR: Ye,
-  Z_MEM_ERROR: qe,
-  Z_BUF_ERROR: Ht,
-  Z_DEFLATED: ge
-} = Pe, q = 16180, xe = 16181, be = 16182, _e = 16183, me = 16184, ve = 16185, ke = 16186, ye = 16187, Ee = 16188, Re = 16189, Y = 16190, O = 16191, Q = 16192, Ae = 16193, ee = 16194, Se = 16195, De = 16196, Te = 16197, Ue = 16198, V = 16199, X = 16200, ze = 16201, Ce = 16202, Oe = 16203, Le = 16204, Ie = 16205, te = 16206, Ne = 16207, Ze = 16208, A = 16209, We = 16210, Je = 16211, Ft = 852, Pt = 592, Gt = 15, Kt = Gt, $e = (t) => (t >>> 24 & 255) + (t >>> 8 & 65280) + ((t & 65280) << 8) + ((t & 255) << 24);
-function Vt() {
-  this.strm = null, this.mode = 0, this.last = !1, this.wrap = 0, this.havedict = !1, this.flags = 0, this.dmax = 0, this.check = 0, this.total = 0, this.head = null, this.wbits = 0, this.wsize = 0, this.whave = 0, this.wnext = 0, this.window = null, this.hold = 0, this.bits = 0, this.length = 0, this.offset = 0, this.extra = 0, this.lencode = null, this.distcode = null, this.lenbits = 0, this.distbits = 0, this.ncode = 0, this.nlen = 0, this.ndist = 0, this.have = 0, this.next = null, this.lens = new Uint16Array(320), this.work = new Uint16Array(288), this.lendyn = null, this.distdyn = null, this.sane = 0, this.back = 0, this.was = 0;
+function zt(e, t = {}) {
+	return Rt(e, {
+		...t,
+		raw: !0
+	});
 }
-const Z = (t) => {
-  if (!t)
-    return 1;
-  const i = t.state;
-  return !i || i.strm !== t || i.mode < q || i.mode > Je ? 1 : 0;
-}, Qe = (t) => {
-  if (Z(t))
-    return U;
-  const i = t.state;
-  return t.total_in = t.total_out = i.total = 0, t.msg = "", i.wrap && (t.adler = i.wrap & 1), i.mode = q, i.last = 0, i.havedict = 0, i.flags = -1, i.dmax = 32768, i.head = null, i.hold = 0, i.bits = 0, i.lencode = i.lendyn = new Int32Array(Ft), i.distcode = i.distdyn = new Int32Array(Pt), i.sane = 1, i.back = -1, N;
-}, et = (t) => {
-  if (Z(t))
-    return U;
-  const i = t.state;
-  return i.wsize = 0, i.whave = 0, i.wnext = 0, Qe(t);
-}, tt = (t, i) => {
-  let e;
-  if (Z(t))
-    return U;
-  const a = t.state;
-  return i < 0 ? (e = 0, i = -i) : (e = (i >> 4) + 5, i < 48 && (i &= 15)), i && (i < 8 || i > 15) ? U : (a.window !== null && a.wbits !== i && (a.window = null), a.wrap = e, a.wbits = i, et(t));
-}, it = (t, i) => {
-  if (!t)
-    return U;
-  const e = new Vt();
-  t.state = e, e.strm = t, e.window = null, e.mode = q;
-  const a = tt(t, i);
-  return a !== N && (t.state = null), a;
-}, Xt = (t) => it(t, Kt);
-let Me = !0, ie, ne;
-const Yt = (t) => {
-  if (Me) {
-    ie = new Int32Array(512), ne = new Int32Array(32);
-    let i = 0;
-    for (; i < 144; )
-      t.lens[i++] = 8;
-    for (; i < 256; )
-      t.lens[i++] = 9;
-    for (; i < 280; )
-      t.lens[i++] = 7;
-    for (; i < 288; )
-      t.lens[i++] = 8;
-    for (j(Ve, t.lens, 0, 288, ie, 0, t.work, { bits: 9 }), i = 0; i < 32; )
-      t.lens[i++] = 5;
-    j(Xe, t.lens, 0, 32, ne, 0, t.work, { bits: 5 }), Me = !1;
-  }
-  t.lencode = ie, t.lenbits = 9, t.distcode = ne, t.distbits = 5;
-}, nt = (t, i, e, a) => {
-  let r;
-  const n = t.state;
-  return n.window === null && (n.wsize = 1 << n.wbits, n.wnext = 0, n.whave = 0, n.window = new Uint8Array(n.wsize)), a >= n.wsize ? (n.window.set(i.subarray(e - n.wsize, e), 0), n.wnext = 0, n.whave = n.wsize) : (r = n.wsize - n.wnext, r > a && (r = a), n.window.set(i.subarray(e - a, e - a + r), n.wnext), a -= r, a ? (n.window.set(i.subarray(e - a, e), 0), n.wnext = a, n.whave = n.wsize) : (n.wnext += r, n.wnext === n.wsize && (n.wnext = 0), n.whave < n.wsize && (n.whave += r))), 0;
-}, qt = (t, i) => {
-  let e, a, r, n, c, f, u, o, s, E, w, l, p, S, b = 0, x, y, _, d, k, D, h, R;
-  const v = new Uint8Array(4);
-  let g, m;
-  const I = (
-    /* permutation of code lengths */
-    new Uint8Array([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15])
-  );
-  if (Z(t) || !t.output || !t.input && t.avail_in !== 0)
-    return U;
-  e = t.state, e.mode === O && (e.mode = Q), c = t.next_out, r = t.output, u = t.avail_out, n = t.next_in, a = t.input, f = t.avail_in, o = e.hold, s = e.bits, E = f, w = u, R = N;
-  e:
-    for (; ; )
-      switch (e.mode) {
-        case q:
-          if (e.wrap === 0) {
-            e.mode = Q;
-            break;
-          }
-          for (; s < 16; ) {
-            if (f === 0)
-              break e;
-            f--, o += a[n++] << s, s += 8;
-          }
-          if (e.wrap & 2 && o === 35615) {
-            e.wbits === 0 && (e.wbits = 15), e.check = 0, v[0] = o & 255, v[1] = o >>> 8 & 255, e.check = z(e.check, v, 2, 0), o = 0, s = 0, e.mode = xe;
-            break;
-          }
-          if (e.head && (e.head.done = !1), !(e.wrap & 1) || /* check if zlib header allowed */
-          (((o & 255) << 8) + (o >> 8)) % 31) {
-            t.msg = "incorrect header check", e.mode = A;
-            break;
-          }
-          if ((o & 15) !== ge) {
-            t.msg = "unknown compression method", e.mode = A;
-            break;
-          }
-          if (o >>>= 4, s -= 4, h = (o & 15) + 8, e.wbits === 0 && (e.wbits = h), h > 15 || h > e.wbits) {
-            t.msg = "invalid window size", e.mode = A;
-            break;
-          }
-          e.dmax = 1 << e.wbits, e.flags = 0, t.adler = e.check = 1, e.mode = o & 512 ? Re : O, o = 0, s = 0;
-          break;
-        case xe:
-          for (; s < 16; ) {
-            if (f === 0)
-              break e;
-            f--, o += a[n++] << s, s += 8;
-          }
-          if (e.flags = o, (e.flags & 255) !== ge) {
-            t.msg = "unknown compression method", e.mode = A;
-            break;
-          }
-          if (e.flags & 57344) {
-            t.msg = "unknown header flags set", e.mode = A;
-            break;
-          }
-          e.head && (e.head.text = o >> 8 & 1), e.flags & 512 && e.wrap & 4 && (v[0] = o & 255, v[1] = o >>> 8 & 255, e.check = z(e.check, v, 2, 0)), o = 0, s = 0, e.mode = be;
-        /* falls through */
-        case be:
-          for (; s < 32; ) {
-            if (f === 0)
-              break e;
-            f--, o += a[n++] << s, s += 8;
-          }
-          e.head && (e.head.time = o), e.flags & 512 && e.wrap & 4 && (v[0] = o & 255, v[1] = o >>> 8 & 255, v[2] = o >>> 16 & 255, v[3] = o >>> 24 & 255, e.check = z(e.check, v, 4, 0)), o = 0, s = 0, e.mode = _e;
-        /* falls through */
-        case _e:
-          for (; s < 16; ) {
-            if (f === 0)
-              break e;
-            f--, o += a[n++] << s, s += 8;
-          }
-          e.head && (e.head.xflags = o & 255, e.head.os = o >> 8), e.flags & 512 && e.wrap & 4 && (v[0] = o & 255, v[1] = o >>> 8 & 255, e.check = z(e.check, v, 2, 0)), o = 0, s = 0, e.mode = me;
-        /* falls through */
-        case me:
-          if (e.flags & 1024) {
-            for (; s < 16; ) {
-              if (f === 0)
-                break e;
-              f--, o += a[n++] << s, s += 8;
-            }
-            e.length = o, e.head && (e.head.extra_len = o), e.flags & 512 && e.wrap & 4 && (v[0] = o & 255, v[1] = o >>> 8 & 255, e.check = z(e.check, v, 2, 0)), o = 0, s = 0;
-          } else e.head && (e.head.extra = null);
-          e.mode = ve;
-        /* falls through */
-        case ve:
-          if (e.flags & 1024 && (l = e.length, l > f && (l = f), l && (e.head && (h = e.head.extra_len - e.length, e.head.extra || (e.head.extra = new Uint8Array(e.head.extra_len)), e.head.extra.set(
-            a.subarray(
-              n,
-              // extra field is limited to 65536 bytes
-              // - no need for additional size check
-              n + l
-            ),
-            /*len + copy > state.head.extra_max - len ? state.head.extra_max : copy,*/
-            h
-          )), e.flags & 512 && e.wrap & 4 && (e.check = z(e.check, a, l, n)), f -= l, n += l, e.length -= l), e.length))
-            break e;
-          e.length = 0, e.mode = ke;
-        /* falls through */
-        case ke:
-          if (e.flags & 2048) {
-            if (f === 0)
-              break e;
-            l = 0;
-            do
-              h = a[n + l++], e.head && h && e.length < 65536 && (e.head.name += String.fromCharCode(h));
-            while (h && l < f);
-            if (e.flags & 512 && e.wrap & 4 && (e.check = z(e.check, a, l, n)), f -= l, n += l, h)
-              break e;
-          } else e.head && (e.head.name = null);
-          e.length = 0, e.mode = ye;
-        /* falls through */
-        case ye:
-          if (e.flags & 4096) {
-            if (f === 0)
-              break e;
-            l = 0;
-            do
-              h = a[n + l++], e.head && h && e.length < 65536 && (e.head.comment += String.fromCharCode(h));
-            while (h && l < f);
-            if (e.flags & 512 && e.wrap & 4 && (e.check = z(e.check, a, l, n)), f -= l, n += l, h)
-              break e;
-          } else e.head && (e.head.comment = null);
-          e.mode = Ee;
-        /* falls through */
-        case Ee:
-          if (e.flags & 512) {
-            for (; s < 16; ) {
-              if (f === 0)
-                break e;
-              f--, o += a[n++] << s, s += 8;
-            }
-            if (e.wrap & 4 && o !== (e.check & 65535)) {
-              t.msg = "header crc mismatch", e.mode = A;
-              break;
-            }
-            o = 0, s = 0;
-          }
-          e.head && (e.head.hcrc = e.flags >> 9 & 1, e.head.done = !0), t.adler = e.check = 0, e.mode = O;
-          break;
-        case Re:
-          for (; s < 32; ) {
-            if (f === 0)
-              break e;
-            f--, o += a[n++] << s, s += 8;
-          }
-          t.adler = e.check = $e(o), o = 0, s = 0, e.mode = Y;
-        /* falls through */
-        case Y:
-          if (e.havedict === 0)
-            return t.next_out = c, t.avail_out = u, t.next_in = n, t.avail_in = f, e.hold = o, e.bits = s, Bt;
-          t.adler = e.check = 1, e.mode = O;
-        /* falls through */
-        case O:
-          if (i === Mt || i === K)
-            break e;
-        /* falls through */
-        case Q:
-          if (e.last) {
-            o >>>= s & 7, s -= s & 7, e.mode = te;
-            break;
-          }
-          for (; s < 3; ) {
-            if (f === 0)
-              break e;
-            f--, o += a[n++] << s, s += 8;
-          }
-          switch (e.last = o & 1, o >>>= 1, s -= 1, o & 3) {
-            case 0:
-              e.mode = Ae;
-              break;
-            case 1:
-              if (Yt(e), e.mode = V, i === K) {
-                o >>>= 2, s -= 2;
-                break e;
-              }
-              break;
-            case 2:
-              e.mode = De;
-              break;
-            case 3:
-              t.msg = "invalid block type", e.mode = A;
-          }
-          o >>>= 2, s -= 2;
-          break;
-        case Ae:
-          for (o >>>= s & 7, s -= s & 7; s < 32; ) {
-            if (f === 0)
-              break e;
-            f--, o += a[n++] << s, s += 8;
-          }
-          if ((o & 65535) !== (o >>> 16 ^ 65535)) {
-            t.msg = "invalid stored block lengths", e.mode = A;
-            break;
-          }
-          if (e.length = o & 65535, o = 0, s = 0, e.mode = ee, i === K)
-            break e;
-        /* falls through */
-        case ee:
-          e.mode = Se;
-        /* falls through */
-        case Se:
-          if (l = e.length, l) {
-            if (l > f && (l = f), l > u && (l = u), l === 0)
-              break e;
-            r.set(a.subarray(n, n + l), c), f -= l, n += l, u -= l, c += l, e.length -= l;
-            break;
-          }
-          e.mode = O;
-          break;
-        case De:
-          for (; s < 14; ) {
-            if (f === 0)
-              break e;
-            f--, o += a[n++] << s, s += 8;
-          }
-          if (e.nlen = (o & 31) + 257, o >>>= 5, s -= 5, e.ndist = (o & 31) + 1, o >>>= 5, s -= 5, e.ncode = (o & 15) + 4, o >>>= 4, s -= 4, e.nlen > 286 || e.ndist > 30) {
-            t.msg = "too many length or distance symbols", e.mode = A;
-            break;
-          }
-          e.have = 0, e.mode = Te;
-        /* falls through */
-        case Te:
-          for (; e.have < e.ncode; ) {
-            for (; s < 3; ) {
-              if (f === 0)
-                break e;
-              f--, o += a[n++] << s, s += 8;
-            }
-            e.lens[I[e.have++]] = o & 7, o >>>= 3, s -= 3;
-          }
-          for (; e.have < 19; )
-            e.lens[I[e.have++]] = 0;
-          if (e.lencode = e.lendyn, e.lenbits = 7, g = { bits: e.lenbits }, R = j($t, e.lens, 0, 19, e.lencode, 0, e.work, g), e.lenbits = g.bits, R) {
-            t.msg = "invalid code lengths set", e.mode = A;
-            break;
-          }
-          e.have = 0, e.mode = Ue;
-        /* falls through */
-        case Ue:
-          for (; e.have < e.nlen + e.ndist; ) {
-            for (; b = e.lencode[o & (1 << e.lenbits) - 1], x = b >>> 24, y = b >>> 16 & 255, _ = b & 65535, !(x <= s); ) {
-              if (f === 0)
-                break e;
-              f--, o += a[n++] << s, s += 8;
-            }
-            if (_ < 16)
-              o >>>= x, s -= x, e.lens[e.have++] = _;
-            else {
-              if (_ === 16) {
-                for (m = x + 2; s < m; ) {
-                  if (f === 0)
-                    break e;
-                  f--, o += a[n++] << s, s += 8;
-                }
-                if (o >>>= x, s -= x, e.have === 0) {
-                  t.msg = "invalid bit length repeat", e.mode = A;
-                  break;
-                }
-                h = e.lens[e.have - 1], l = 3 + (o & 3), o >>>= 2, s -= 2;
-              } else if (_ === 17) {
-                for (m = x + 3; s < m; ) {
-                  if (f === 0)
-                    break e;
-                  f--, o += a[n++] << s, s += 8;
-                }
-                o >>>= x, s -= x, h = 0, l = 3 + (o & 7), o >>>= 3, s -= 3;
-              } else {
-                for (m = x + 7; s < m; ) {
-                  if (f === 0)
-                    break e;
-                  f--, o += a[n++] << s, s += 8;
-                }
-                o >>>= x, s -= x, h = 0, l = 11 + (o & 127), o >>>= 7, s -= 7;
-              }
-              if (e.have + l > e.nlen + e.ndist) {
-                t.msg = "invalid bit length repeat", e.mode = A;
-                break;
-              }
-              for (; l--; )
-                e.lens[e.have++] = h;
-            }
-          }
-          if (e.mode === A)
-            break;
-          if (e.lens[256] === 0) {
-            t.msg = "invalid code -- missing end-of-block", e.mode = A;
-            break;
-          }
-          if (e.lenbits = 9, g = { bits: e.lenbits }, R = j(Ve, e.lens, 0, e.nlen, e.lencode, 0, e.work, g), e.lenbits = g.bits, R) {
-            t.msg = "invalid literal/lengths set", e.mode = A;
-            break;
-          }
-          if (e.distbits = 6, e.distcode = e.distdyn, g = { bits: e.distbits }, R = j(Xe, e.lens, e.nlen, e.ndist, e.distcode, 0, e.work, g), e.distbits = g.bits, R) {
-            t.msg = "invalid distances set", e.mode = A;
-            break;
-          }
-          if (e.mode = V, i === K)
-            break e;
-        /* falls through */
-        case V:
-          e.mode = X;
-        /* falls through */
-        case X:
-          if (f >= 6 && u >= 258) {
-            t.next_out = c, t.avail_out = u, t.next_in = n, t.avail_in = f, e.hold = o, e.bits = s, Ct(t, w), c = t.next_out, r = t.output, u = t.avail_out, n = t.next_in, a = t.input, f = t.avail_in, o = e.hold, s = e.bits, e.mode === O && (e.back = -1);
-            break;
-          }
-          for (e.back = 0; b = e.lencode[o & (1 << e.lenbits) - 1], x = b >>> 24, y = b >>> 16 & 255, _ = b & 65535, !(x <= s); ) {
-            if (f === 0)
-              break e;
-            f--, o += a[n++] << s, s += 8;
-          }
-          if (y && (y & 240) === 0) {
-            for (d = x, k = y, D = _; b = e.lencode[D + ((o & (1 << d + k) - 1) >> d)], x = b >>> 24, y = b >>> 16 & 255, _ = b & 65535, !(d + x <= s); ) {
-              if (f === 0)
-                break e;
-              f--, o += a[n++] << s, s += 8;
-            }
-            o >>>= d, s -= d, e.back += d;
-          }
-          if (o >>>= x, s -= x, e.back += x, e.length = _, y === 0) {
-            e.mode = Ie;
-            break;
-          }
-          if (y & 32) {
-            e.back = -1, e.mode = O;
-            break;
-          }
-          if (y & 64) {
-            t.msg = "invalid literal/length code", e.mode = A;
-            break;
-          }
-          e.extra = y & 15, e.mode = ze;
-        /* falls through */
-        case ze:
-          if (e.extra) {
-            for (m = e.extra; s < m; ) {
-              if (f === 0)
-                break e;
-              f--, o += a[n++] << s, s += 8;
-            }
-            e.length += o & (1 << e.extra) - 1, o >>>= e.extra, s -= e.extra, e.back += e.extra;
-          }
-          e.was = e.length, e.mode = Ce;
-        /* falls through */
-        case Ce:
-          for (; b = e.distcode[o & (1 << e.distbits) - 1], x = b >>> 24, y = b >>> 16 & 255, _ = b & 65535, !(x <= s); ) {
-            if (f === 0)
-              break e;
-            f--, o += a[n++] << s, s += 8;
-          }
-          if ((y & 240) === 0) {
-            for (d = x, k = y, D = _; b = e.distcode[D + ((o & (1 << d + k) - 1) >> d)], x = b >>> 24, y = b >>> 16 & 255, _ = b & 65535, !(d + x <= s); ) {
-              if (f === 0)
-                break e;
-              f--, o += a[n++] << s, s += 8;
-            }
-            o >>>= d, s -= d, e.back += d;
-          }
-          if (o >>>= x, s -= x, e.back += x, y & 64) {
-            t.msg = "invalid distance code", e.mode = A;
-            break;
-          }
-          e.offset = _, e.extra = y & 15, e.mode = Oe;
-        /* falls through */
-        case Oe:
-          if (e.extra) {
-            for (m = e.extra; s < m; ) {
-              if (f === 0)
-                break e;
-              f--, o += a[n++] << s, s += 8;
-            }
-            e.offset += o & (1 << e.extra) - 1, o >>>= e.extra, s -= e.extra, e.back += e.extra;
-          }
-          if (e.offset > e.dmax) {
-            t.msg = "invalid distance too far back", e.mode = A;
-            break;
-          }
-          e.mode = Le;
-        /* falls through */
-        case Le:
-          if (u === 0)
-            break e;
-          if (l = w - u, e.offset > l) {
-            if (l = e.offset - l, l > e.whave && e.sane) {
-              t.msg = "invalid distance too far back", e.mode = A;
-              break;
-            }
-            l > e.wnext ? (l -= e.wnext, p = e.wsize - l) : p = e.wnext - l, l > e.length && (l = e.length), S = e.window;
-          } else
-            S = r, p = c - e.offset, l = e.length;
-          l > u && (l = u), u -= l, e.length -= l;
-          do
-            r[c++] = S[p++];
-          while (--l);
-          e.length === 0 && (e.mode = X);
-          break;
-        case Ie:
-          if (u === 0)
-            break e;
-          r[c++] = e.length, u--, e.mode = X;
-          break;
-        case te:
-          if (e.wrap) {
-            for (; s < 32; ) {
-              if (f === 0)
-                break e;
-              f--, o |= a[n++] << s, s += 8;
-            }
-            if (w -= u, t.total_out += w, e.total += w, e.wrap & 4 && w && (t.adler = e.check = /*UPDATE_CHECK(state.check, put - _out, _out);*/
-            e.flags ? z(e.check, r, w, c - w) : re(e.check, r, w, c - w)), w = u, e.wrap & 4 && (e.flags ? o : $e(o)) !== e.check) {
-              t.msg = "incorrect data check", e.mode = A;
-              break;
-            }
-            o = 0, s = 0;
-          }
-          e.mode = Ne;
-        /* falls through */
-        case Ne:
-          if (e.wrap && e.flags) {
-            for (; s < 32; ) {
-              if (f === 0)
-                break e;
-              f--, o += a[n++] << s, s += 8;
-            }
-            if (e.wrap & 4 && o !== (e.total & 4294967295)) {
-              t.msg = "incorrect length check", e.mode = A;
-              break;
-            }
-            o = 0, s = 0;
-          }
-          e.mode = Ze;
-        /* falls through */
-        case Ze:
-          R = jt;
-          break e;
-        case A:
-          R = Ye;
-          break e;
-        case We:
-          return qe;
-        case Je:
-        /* falls through */
-        default:
-          return U;
-      }
-  return t.next_out = c, t.avail_out = u, t.next_in = n, t.avail_in = f, e.hold = o, e.bits = s, (e.wsize || w !== t.avail_out && e.mode < A && (e.mode < te || i !== pe)) && nt(t, t.output, t.next_out, w - t.avail_out), E -= t.avail_in, w -= t.avail_out, t.total_in += E, t.total_out += w, e.total += w, e.wrap & 4 && w && (t.adler = e.check = /*UPDATE_CHECK(state.check, strm.next_out - _out, _out);*/
-  e.flags ? z(e.check, r, w, t.next_out - w) : re(e.check, r, w, t.next_out - w)), t.data_type = e.bits + (e.last ? 64 : 0) + (e.mode === O ? 128 : 0) + (e.mode === V || e.mode === ee ? 256 : 0), (E === 0 && w === 0 || i === pe) && R === N && (R = Ht), R;
-}, Wt = (t) => {
-  if (Z(t))
-    return U;
-  let i = t.state;
-  return i.window && (i.window = null), t.state = null, N;
-}, Jt = (t, i) => {
-  if (Z(t))
-    return U;
-  const e = t.state;
-  return (e.wrap & 2) === 0 ? U : (e.head = i, i.done = !1, N);
-}, Qt = (t, i) => {
-  const e = i.length;
-  let a, r, n;
-  return Z(t) || (a = t.state, a.wrap !== 0 && a.mode !== Y) ? U : a.mode === Y && (r = 1, r = re(r, i, e, 0), r !== a.check) ? Ye : (n = nt(t, i, e, e), n ? (a.mode = We, qe) : (a.havedict = 1, N));
-};
-var ei = et, ti = tt, ii = Qe, ni = Xt, ai = it, oi = qt, si = Wt, ri = Jt, fi = Qt, li = "pako inflate (from Nodeca project)", L = {
-  inflateReset: ei,
-  inflateReset2: ti,
-  inflateResetKeep: ii,
-  inflateInit: ni,
-  inflateInit2: ai,
-  inflate: oi,
-  inflateEnd: si,
-  inflateGetHeader: ri,
-  inflateSetDictionary: fi,
-  inflateInfo: li
-};
-function ci() {
-  this.text = 0, this.time = 0, this.xflags = 0, this.os = 0, this.extra = null, this.extra_len = 0, this.name = "", this.comment = "", this.hcrc = 0, this.done = !1;
+//#endregion
+//#region node_modules/@foxglove/crc/dist/esm/src/index.js
+function Bt({ polynomial: e, numTables: t }) {
+	let n = new Uint32Array(256 * t);
+	for (let t = 0; t < 256; t++) {
+		let r = t;
+		r = (r & 1) * e ^ r >>> 1, r = (r & 1) * e ^ r >>> 1, r = (r & 1) * e ^ r >>> 1, r = (r & 1) * e ^ r >>> 1, r = (r & 1) * e ^ r >>> 1, r = (r & 1) * e ^ r >>> 1, r = (r & 1) * e ^ r >>> 1, r = (r & 1) * e ^ r >>> 1, n[t] = r;
+	}
+	for (let e = 256; e < n.length; e++) {
+		let t = n[e - 256];
+		n[e] = n[t & 255] ^ t >>> 8;
+	}
+	return n;
 }
-var di = ci;
-const at = Object.prototype.toString, {
-  Z_NO_FLUSH: hi,
-  Z_FINISH: ui,
-  Z_OK: H,
-  Z_STREAM_END: ae,
-  Z_NEED_DICT: oe,
-  Z_STREAM_ERROR: wi,
-  Z_DATA_ERROR: je,
-  Z_MEM_ERROR: pi
-} = Pe;
-function W(t) {
-  this.options = Ge.assign({
-    chunkSize: 1024 * 64,
-    windowBits: 15,
-    to: ""
-  }, t || {});
-  const i = this.options;
-  i.raw && i.windowBits >= 0 && i.windowBits < 16 && (i.windowBits = -i.windowBits, i.windowBits === 0 && (i.windowBits = -15)), i.windowBits >= 0 && i.windowBits < 16 && !(t && t.windowBits) && (i.windowBits += 32), i.windowBits > 15 && i.windowBits < 48 && (i.windowBits & 15) === 0 && (i.windowBits |= 15), this.err = 0, this.msg = "", this.ended = !1, this.chunks = [], this.strm = new Ut(), this.strm.avail_out = 0;
-  let e = L.inflateInit2(
-    this.strm,
-    i.windowBits
-  );
-  if (e !== H)
-    throw new Error(fe[e]);
-  if (this.header = new di(), L.inflateGetHeader(this.strm, this.header), i.dictionary && (typeof i.dictionary == "string" ? i.dictionary = le.string2buf(i.dictionary) : at.call(i.dictionary) === "[object ArrayBuffer]" && (i.dictionary = new Uint8Array(i.dictionary)), i.raw && (e = L.inflateSetDictionary(this.strm, i.dictionary), e !== H)))
-    throw new Error(fe[e]);
-}
-W.prototype.push = function(t, i) {
-  const e = this.strm, a = this.options.chunkSize, r = this.options.dictionary;
-  let n, c, f;
-  if (this.ended) return !1;
-  for (i === ~~i ? c = i : c = i === !0 ? ui : hi, at.call(t) === "[object ArrayBuffer]" ? e.input = new Uint8Array(t) : e.input = t, e.next_in = 0, e.avail_in = e.input.length; ; ) {
-    for (e.avail_out === 0 && (e.output = new Uint8Array(a), e.next_out = 0, e.avail_out = a), n = L.inflate(e, c), n === oe && r && (n = L.inflateSetDictionary(e, r), n === H ? n = L.inflate(e, c) : n === je && (n = oe)); e.avail_in > 0 && n === ae && e.state.wrap > 0 && t[e.next_in] !== 0; )
-      L.inflateReset(e), n = L.inflate(e, c);
-    switch (n) {
-      case wi:
-      case je:
-      case oe:
-      case pi:
-        return this.onEnd(n), this.ended = !0, !1;
-    }
-    if (f = e.avail_out, e.next_out && (e.avail_out === 0 || n === ae))
-      if (this.options.to === "string") {
-        let u = le.utf8border(e.output, e.next_out), o = e.next_out - u, s = le.buf2string(e.output, u);
-        e.next_out = o, e.avail_out = a - o, o && e.output.set(e.output.subarray(u, u + o), 0), this.onData(s);
-      } else
-        this.onData(e.output.length === e.next_out ? e.output : e.output.subarray(0, e.next_out));
-    if (!(n === H && f === 0)) {
-      if (n === ae)
-        return n = L.inflateEnd(this.strm), this.onEnd(n), this.ended = !0, !0;
-      if (e.avail_in === 0) break;
-    }
-  }
-  return !0;
-};
-W.prototype.onData = function(t) {
-  this.chunks.push(t);
-};
-W.prototype.onEnd = function(t) {
-  t === H && (this.options.to === "string" ? this.result = this.chunks.join("") : this.result = Ge.flattenChunks(this.chunks)), this.chunks = [], this.err = t, this.msg = this.strm.msg;
-};
-function gi(t, i) {
-  const e = new W(i);
-  if (e.push(t), e.err) throw e.msg || fe[e.err];
-  return e.result;
-}
-function xi(t, i) {
-  return i = i || {}, i.raw = !0, gi(t, i);
-}
-var bi = xi, _i = {
-  inflateRaw: bi
-};
-const { inflateRaw: mi } = _i;
-var vi = mi;
-function ki({ polynomial: t, numTables: i }) {
-  const e = new Uint32Array(256 * i);
-  for (let a = 0; a < 256; a++) {
-    let r = a;
-    r = (r & 1) * t ^ r >>> 1, r = (r & 1) * t ^ r >>> 1, r = (r & 1) * t ^ r >>> 1, r = (r & 1) * t ^ r >>> 1, r = (r & 1) * t ^ r >>> 1, r = (r & 1) * t ^ r >>> 1, r = (r & 1) * t ^ r >>> 1, r = (r & 1) * t ^ r >>> 1, e[a] = r;
-  }
-  for (let a = 256; a < e.length; a++) {
-    const r = e[a - 256];
-    e[a] = e[r & 255] ^ r >>> 8;
-  }
-  return e;
-}
-const C = ki({ polynomial: 3988292384, numTables: 8 });
-function yi() {
-  return -1;
-}
-function Ei(t, i) {
-  const e = i.byteLength, a = new DataView(i.buffer, i.byteOffset, e);
-  let r = t, n = 0;
-  const c = -a.byteOffset & 3;
-  for (; n < c && n < e; n++)
-    r = C[(r ^ a.getUint8(n)) & 255] ^ r >>> 8;
-  if (n === e)
-    return r;
-  n = c;
-  let f = e - n;
-  for (; f >= 8; n += 8, f -= 8) {
-    r ^= a.getUint32(n, !0);
-    const u = a.getUint32(n + 4, !0);
-    r = C[0 * 256 + (u >>> 24 & 255)] ^ C[1 * 256 + (u >>> 16 & 255)] ^ C[2 * 256 + (u >>> 8 & 255)] ^ C[3 * 256 + (u >>> 0 & 255)] ^ C[4 * 256 + (r >>> 24 & 255)] ^ C[5 * 256 + (r >>> 16 & 255)] ^ C[6 * 256 + (r >>> 8 & 255)] ^ C[7 * 256 + (r >>> 0 & 255)];
-  }
-  for (let u = n; u < e; u++)
-    r = C[(r ^ a.getUint8(u)) & 255] ^ r >>> 8;
-  return r;
-}
-function Ri(t) {
-  return (t ^ -1) >>> 0;
-}
-function Ai(t) {
-  return Ri(Ei(yi(), t));
-}
-const Be = {
-  ".3g2": "video/3gpp2",
-  ".3gp": "video/3gpp",
-  ".7z": "application/x-7z-compressed",
-  ".aac": "audio/aac",
-  ".abw": "application/x-abiword",
-  ".arc": "application/x-freearc",
-  ".avi": "video/x-msvideo",
-  ".azw": "application/vnd.amazon.ebook",
-  ".bin": "application/octet-stream",
-  ".bmp": "image/bmp",
-  ".bz": "application/x-bzip",
-  ".bz2": "application/x-bzip2",
-  ".csh": "application/x-csh",
-  ".css": "text/css",
-  ".csv": "text/csv",
-  ".doc": "application/msword",
-  ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  ".eot": "application/vnd.ms-fontobject",
-  ".epub": "application/epub+zip",
-  ".gif": "image/gif",
-  ".glb": "model/gltf-binary",
-  ".gltf": "model/gltf+json",
-  ".gz": "application/gzip",
-  ".htm": "text/html",
-  ".html": "text/html",
-  ".ico": "image/vnd.microsoft.icon",
-  ".ics": "text/calendar",
-  ".jar": "application/java-archive",
-  ".jpeg": ".jpg",
-  ".js": "text/javascript",
-  ".json": "application/json",
-  ".jsonld": "application/ld+json",
-  ".mid": ".midi",
-  ".mjs": "text/javascript",
-  ".mp3": "audio/mpeg",
-  ".mpeg": "video/mpeg",
-  ".mpkg": "application/vnd.apple.installer+xml",
-  ".mtl": "model/mtl",
-  ".obj": "model/obj",
-  ".odp": "application/vnd.oasis.opendocument.presentation",
-  ".ods": "application/vnd.oasis.opendocument.spreadsheet",
-  ".odt": "application/vnd.oasis.opendocument.text",
-  ".oga": "audio/ogg",
-  ".ogv": "video/ogg",
-  ".ogx": "application/ogg",
-  ".opus": "audio/opus",
-  ".otf": "font/otf",
-  ".pdf": "application/pdf",
-  ".php": "application/php",
-  ".png": "image/png",
-  ".ppt": "application/vnd.ms-powerpoint",
-  ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-  ".rar": "application/vnd.rar",
-  ".rtf": "application/rtf",
-  ".sh": "application/x-sh",
-  ".stl": "model/stl",
-  ".svg": "image/svg+xml",
-  ".swf": "application/x-shockwave-flash",
-  ".tar": "application/x-tar",
-  ".tif": "image/tiff",
-  ".tiff": "image/tiff",
-  ".ts": "video/mp2t",
-  ".ttf": "font/ttf",
-  ".txt": "text/plain",
-  ".vsd": "application/vnd.visio",
-  ".wav": "audio/wav",
-  ".weba": "audio/webm",
-  ".webm": "video/webm",
-  ".webp": "image/webp",
-  ".woff": "font/woff",
-  ".woff2": "font/woff2",
-  ".xhtml": "application/xhtml+xml",
-  ".xls": "application/vnd.ms-excel",
-  ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  ".xml": "XML",
-  ".xul": "application/vnd.mozilla.xul+xml",
-  ".zip": "application/zip"
-};
-class Si {
-  constructor(i) {
-    T(this, "url");
-    T(this, "zipSize", 0);
-    T(this, "files", /* @__PURE__ */ new Map());
-    // private readonly fmt_eocd = "<IHHHHIIH";
-    // private readonly fmt_eocd64 = "<IQHHIIQQQQ";
-    // private readonly fmt_cdirentry = "<IHHHHIIIIHHHHHII";
-    // private readonly fmt_localhdr = "<IHHHIIIIHH";
-    T(this, "magic_eocd64", new Uint8Array([80, 75, 6, 6]));
-    T(this, "magic_eocd", new Uint8Array([80, 75, 5, 6]));
-    this.url = i;
-  }
-  async getRange(i, e) {
-    return await (await fetch(this.url, {
-      headers: { Range: `bytes=${i}-${i + e - 1}` }
-    })).arrayBuffer();
-  }
-  async infoiter() {
-    const i = await fetch(this.url, { method: "HEAD" }), e = i.headers.get("Accept-Ranges") || "";
-    if (e !== "bytes") {
-      const s = new URL(this.url).hostname;
-      console.warn(
-        `${s} Accept-Ranges header ('${e}') is not 'bytes'--trying anyway`
-      );
-    }
-    this.zipSize = parseInt(i.headers.get("Content-Length") || "0");
-    let a = await this.getRange(Math.max(this.zipSize - 65536, 0), 65536), r = new Uint8Array(a), n = -1, c = 0, f = this.findLastIndex(r, this.magic_eocd64);
-    if (f >= 0) {
-      const s = new DataView(a);
-      c = Number(s.getBigUint64(f + 40, !0)), n = Number(s.getBigUint64(f + 48, !0));
-    } else if (f = this.findLastIndex(r, this.magic_eocd), f >= 0) {
-      const s = new DataView(a);
-      c = s.getUint32(f + 12, !0), n = s.getUint32(f + 16, !0);
-    }
-    if (n < 0 || n >= this.zipSize)
-      throw new Error("Cannot find central directory");
-    a = await this.getRange(n, c), r = new Uint8Array(a);
-    const u = [];
-    let o = 0;
-    for (; o < c; ) {
-      const s = new DataView(a, o), E = s.getUint16(10, !0), w = s.getUint32(12, !0), l = s.getUint32(20, !0), p = s.getUint32(24, !0), S = s.getUint16(28, !0), b = s.getUint16(30, !0), x = s.getUint16(32, !0), y = s.getUint32(42, !0), _ = s.getUint32(16, !0);
-      o += 46;
-      const d = new TextDecoder().decode(
-        r.slice(o, o + S)
-      );
-      o += S;
-      const k = r.slice(o, o + b);
-      o += b, o += x;
-      const D = new Di(
-        d,
-        w,
-        y,
-        E,
-        l,
-        p,
-        _
-      );
-      D.parseExtra(k), u.push(D);
-    }
-    return u;
-  }
-  findLastIndex(i, e) {
-    for (let a = i.length - e.length; a >= 0; a--)
-      if (e.every((r, n) => r === i[a + n]))
-        return a;
-    return -1;
-  }
-  async getFileList() {
-    const i = await this.infoiter();
-    return this.files = new Map(i.map((e) => [e.filename, e])), Array.from(this.files.keys());
-  }
-  async getFileAsObjectURL(i, e = "") {
-    const a = this.files.get(i);
-    if (!a)
-      throw new Error(`File not found: ${i}`);
-    const r = "." + (i.split(".").pop() || "").toLowerCase();
-    r in Be && e == "" && (e = Be[r]), console.log("File info:", a);
-    const n = 30, c = await this.getRange(
-      a.headerOffset,
-      n + a.filename.length + 2
-    ), f = new DataView(c), u = f.getUint32(0, !0);
-    if (u !== 67324752)
-      throw new Error("Invalid local file header signature");
-    const o = f.getUint16(26, !0), s = f.getUint16(28, !0);
-    console.log("Local header info:", {
-      signature: u.toString(16),
-      filenameLength: o,
-      extraFieldLength: s
-    });
-    const E = a.headerOffset + n + o + s;
-    console.log("File data offset:", E);
-    const w = await this.getRange(
-      E,
-      a.compressSize
-    );
-    console.log("Compressed data size:", w.byteLength);
-    let l;
-    if (a.compressType === 0)
-      l = new Uint8Array(w);
-    else if (a.compressType === 8)
-      try {
-        l = vi(new Uint8Array(w));
-      } catch (b) {
-        throw console.error("Decompression error:", b), console.error(
-          "Compressed data (first 50 bytes):",
-          new Uint8Array(w).slice(0, 50)
-        ), new Error("Failed to decompress file data");
-      }
-    else
-      throw new Error(
-        `Unsupported compression method: ${a.compressType}`
-      );
-    console.log("Decompressed data size:", l.length), l.length !== a.fileSize && console.warn(
-      `Decompressed size (${l.length}) doesn't match expected size (${a.fileSize})`
-    );
-    const p = this.calculateCRC32(l);
-    p !== a.crc32 && console.warn(
-      `Calculated CRC32 (${p}) doesn't match expected CRC32 (${a.crc32})`
-    );
-    const S = new Blob([l], {
-      type: e || "application/octet-stream"
-    });
-    return URL.createObjectURL(S);
-  }
-  calculateCRC32(i) {
-    return Ai(i);
-  }
-}
-class Di {
-  constructor(i, e, a, r, n, c, f) {
-    T(this, "filename");
-    T(this, "dateTime");
-    T(this, "headerOffset");
-    T(this, "compressType");
-    T(this, "compressSize");
-    T(this, "fileSize");
-    T(this, "crc32");
-    this.filename = i, this.dateTime = e, this.headerOffset = a, this.compressType = r, this.compressSize = n, this.fileSize = c, this.crc32 = f;
-  }
-  parseExtra(i) {
-    let e = 0;
-    for (; e < i.length; ) {
-      const a = i[e + 1] << 8 | i[e], r = i[e + 3] << 8 | i[e + 2];
-      e += 4, a === 1 ? (r >= 8 && this.fileSize === 4294967295 && (this.fileSize = Number(
-        new DataView(i.buffer, e, 8).getBigUint64(0, !0)
-      ), e += 8), r >= 16 && this.compressSize === 4294967295 && (this.compressSize = Number(
-        new DataView(i.buffer, e, 8).getBigUint64(0, !0)
-      ), e += 8), r >= 24 && this.headerOffset === 4294967295 && (this.headerOffset = Number(
-        new DataView(i.buffer, e, 8).getBigUint64(0, !0)
-      ), e += 8)) : e += r;
-    }
-  }
-}
-const se = document.querySelector("#output");
-document.querySelector("#load-zip-listing").addEventListener("click", () => {
-  const t = document.querySelector("#link-to-zip").value;
-  t ? se.textContent = "Loading ZIP listing..." : se.textContent = "Please enter a valid ZIP URL";
-  const i = new Si(t);
-  i.getFileList().then((e) => {
-    se.innerHTML = "<ul>" + e.map(
-      (a) => `<li>${a} <button class="download-button" type="button" data-file="${a}">Download</button></li>`
-    ).join(`
-`) + "</ul>", document.querySelectorAll(".download-button").forEach((a) => {
-      a.addEventListener("click", async (r) => {
-        const c = r.target.getAttribute("data-file"), f = await i.getFileAsObjectURL(c), u = document.createElement("a");
-        u.href = f, u.download = c.split("/").pop() || c, u.click(), setTimeout(() => {
-          u.remove(), URL.revokeObjectURL(f);
-        }, 5e3);
-      });
-    });
-  });
+var $ = Bt({
+	polynomial: 3988292384,
+	numTables: 8
 });
+function Vt() {
+	return -1;
+}
+function Ht(e, t) {
+	let n = t.byteLength, r = new DataView(t.buffer, t.byteOffset, n), i = e, a = 0, o = -r.byteOffset & 3;
+	for (; a < o && a < n; a++) i = $[(i ^ r.getUint8(a)) & 255] ^ i >>> 8;
+	if (a === n) return i;
+	a = o;
+	let s = n - a;
+	for (; s >= 8; a += 8, s -= 8) {
+		i ^= r.getUint32(a, !0);
+		let e = r.getUint32(a + 4, !0);
+		i = $[0 + (e >>> 24 & 255)] ^ $[1 * 256 + (e >>> 16 & 255)] ^ $[2 * 256 + (e >>> 8 & 255)] ^ $[3 * 256 + (e >>> 0 & 255)] ^ $[4 * 256 + (i >>> 24 & 255)] ^ $[5 * 256 + (i >>> 16 & 255)] ^ $[6 * 256 + (i >>> 8 & 255)] ^ $[7 * 256 + (i >>> 0 & 255)];
+	}
+	for (let e = a; e < n; e++) i = $[(i ^ r.getUint8(e)) & 255] ^ i >>> 8;
+	return i;
+}
+function Ut(e) {
+	return (e ^ -1) >>> 0;
+}
+function Wt(e) {
+	return Ut(Ht(Vt(), e));
+}
+//#endregion
+//#region lib/mime-types.ts
+var Gt = {
+	".3g2": "video/3gpp2",
+	".3gp": "video/3gpp",
+	".7z": "application/x-7z-compressed",
+	".aac": "audio/aac",
+	".abw": "application/x-abiword",
+	".arc": "application/x-freearc",
+	".avi": "video/x-msvideo",
+	".azw": "application/vnd.amazon.ebook",
+	".bin": "application/octet-stream",
+	".bmp": "image/bmp",
+	".bz": "application/x-bzip",
+	".bz2": "application/x-bzip2",
+	".csh": "application/x-csh",
+	".css": "text/css",
+	".csv": "text/csv",
+	".doc": "application/msword",
+	".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+	".eot": "application/vnd.ms-fontobject",
+	".epub": "application/epub+zip",
+	".gif": "image/gif",
+	".glb": "model/gltf-binary",
+	".gltf": "model/gltf+json",
+	".gz": "application/gzip",
+	".htm": "text/html",
+	".html": "text/html",
+	".ico": "image/vnd.microsoft.icon",
+	".ics": "text/calendar",
+	".jar": "application/java-archive",
+	".jpeg": ".jpg",
+	".js": "text/javascript",
+	".json": "application/json",
+	".jsonld": "application/ld+json",
+	".mid": ".midi",
+	".mjs": "text/javascript",
+	".mp3": "audio/mpeg",
+	".mpeg": "video/mpeg",
+	".mpkg": "application/vnd.apple.installer+xml",
+	".mtl": "model/mtl",
+	".obj": "model/obj",
+	".odp": "application/vnd.oasis.opendocument.presentation",
+	".ods": "application/vnd.oasis.opendocument.spreadsheet",
+	".odt": "application/vnd.oasis.opendocument.text",
+	".oga": "audio/ogg",
+	".ogv": "video/ogg",
+	".ogx": "application/ogg",
+	".opus": "audio/opus",
+	".otf": "font/otf",
+	".pdf": "application/pdf",
+	".php": "application/php",
+	".png": "image/png",
+	".ppt": "application/vnd.ms-powerpoint",
+	".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+	".rar": "application/vnd.rar",
+	".rtf": "application/rtf",
+	".sh": "application/x-sh",
+	".stl": "model/stl",
+	".svg": "image/svg+xml",
+	".swf": "application/x-shockwave-flash",
+	".tar": "application/x-tar",
+	".tif": "image/tiff",
+	".tiff": "image/tiff",
+	".ts": "video/mp2t",
+	".ttf": "font/ttf",
+	".txt": "text/plain",
+	".vsd": "application/vnd.visio",
+	".wav": "audio/wav",
+	".weba": "audio/webm",
+	".webm": "video/webm",
+	".webp": "image/webp",
+	".woff": "font/woff",
+	".woff2": "font/woff2",
+	".xhtml": "application/xhtml+xml",
+	".xls": "application/vnd.ms-excel",
+	".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+	".xml": "XML",
+	".xul": "application/vnd.mozilla.xul+xml",
+	".zip": "application/zip"
+}, Kt = class {
+	url;
+	zipSize = 0;
+	files = /* @__PURE__ */ new Map();
+	magic_eocd64 = new Uint8Array([
+		80,
+		75,
+		6,
+		6
+	]);
+	magic_eocd = new Uint8Array([
+		80,
+		75,
+		5,
+		6
+	]);
+	constructor(e) {
+		this.url = e;
+	}
+	async getRange(e, t) {
+		return await (await fetch(this.url, { headers: { Range: `bytes=${e}-${e + t - 1}` } })).arrayBuffer();
+	}
+	async infoiter() {
+		let e = await fetch(this.url, { method: "HEAD" }), t = e.headers.get("Accept-Ranges") || "";
+		if (t !== "bytes") {
+			let e = new URL(this.url).hostname;
+			console.warn(`${e} Accept-Ranges header ('${t}') is not 'bytes'--trying anyway`);
+		}
+		this.zipSize = parseInt(e.headers.get("Content-Length") || "0");
+		let n = await this.getRange(Math.max(this.zipSize - 65536, 0), 65536), r = new Uint8Array(n), i = -1, a = 0, o = this.findLastIndex(r, this.magic_eocd64);
+		if (o >= 0) {
+			let e = new DataView(n);
+			a = Number(e.getBigUint64(o + 40, !0)), i = Number(e.getBigUint64(o + 48, !0));
+		} else if (o = this.findLastIndex(r, this.magic_eocd), o >= 0) {
+			let e = new DataView(n);
+			a = e.getUint32(o + 12, !0), i = e.getUint32(o + 16, !0);
+		}
+		if (i < 0 || i >= this.zipSize) throw Error("Cannot find central directory");
+		n = await this.getRange(i, a), r = new Uint8Array(n);
+		let s = [], c = 0;
+		for (; c < a;) {
+			let e = new DataView(n, c), t = e.getUint16(10, !0), i = e.getUint32(12, !0), a = e.getUint32(20, !0), o = e.getUint32(24, !0), l = e.getUint16(28, !0), u = e.getUint16(30, !0), d = e.getUint16(32, !0), f = e.getUint32(42, !0), p = e.getUint32(16, !0);
+			c += 46;
+			let m = new TextDecoder().decode(r.slice(c, c + l));
+			c += l;
+			let h = r.slice(c, c + u);
+			c += u, c += d;
+			let g = new qt(m, i, f, t, a, o, p);
+			g.parseExtra(h), s.push(g);
+		}
+		return s;
+	}
+	findLastIndex(e, t) {
+		for (let n = e.length - t.length; n >= 0; n--) if (t.every((t, r) => t === e[n + r])) return n;
+		return -1;
+	}
+	async getFileList() {
+		let e = await this.infoiter();
+		return this.files = new Map(e.map((e) => [e.filename, e])), Array.from(this.files.keys());
+	}
+	async getFileAsObjectURL(e, t = "") {
+		let n = this.files.get(e);
+		if (!n) throw Error(`File not found: ${e}`);
+		let r = "." + (e.split(".").pop() || "").toLowerCase();
+		r in Gt && t == "" && (t = Gt[r]), console.log("File info:", n);
+		let i = await this.getRange(n.headerOffset, 30 + n.filename.length + 2), a = new DataView(i), o = a.getUint32(0, !0);
+		if (o !== 67324752) throw Error("Invalid local file header signature");
+		let s = a.getUint16(26, !0), c = a.getUint16(28, !0);
+		console.log("Local header info:", {
+			signature: o.toString(16),
+			filenameLength: s,
+			extraFieldLength: c
+		});
+		let l = n.headerOffset + 30 + s + c;
+		console.log("File data offset:", l);
+		let u = await this.getRange(l, n.compressSize);
+		console.log("Compressed data size:", u.byteLength);
+		let d;
+		if (n.compressType === 0) d = new Uint8Array(u);
+		else if (n.compressType === 8) try {
+			d = zt(new Uint8Array(u));
+		} catch (e) {
+			throw console.error("Decompression error:", e), console.error("Compressed data (first 50 bytes):", new Uint8Array(u).slice(0, 50)), Error("Failed to decompress file data");
+		}
+		else throw Error(`Unsupported compression method: ${n.compressType}`);
+		console.log("Decompressed data size:", d.length), d.length !== n.fileSize && console.warn(`Decompressed size (${d.length}) doesn't match expected size (${n.fileSize})`);
+		let f = this.calculateCRC32(d);
+		f !== n.crc32 && console.warn(`Calculated CRC32 (${f}) doesn't match expected CRC32 (${n.crc32})`);
+		let p = new Blob([d], { type: t || "application/octet-stream" });
+		return URL.createObjectURL(p);
+	}
+	calculateCRC32(e) {
+		return Wt(e);
+	}
+}, qt = class {
+	filename;
+	dateTime;
+	headerOffset;
+	compressType;
+	compressSize;
+	fileSize;
+	crc32;
+	constructor(e, t, n, r, i, a, o) {
+		this.filename = e, this.dateTime = t, this.headerOffset = n, this.compressType = r, this.compressSize = i, this.fileSize = a, this.crc32 = o;
+	}
+	parseExtra(e) {
+		let t = 0;
+		for (; t < e.length;) {
+			let n = e[t + 1] << 8 | e[t], r = e[t + 3] << 8 | e[t + 2];
+			t += 4, n === 1 ? (r >= 8 && this.fileSize === 4294967295 && (this.fileSize = Number(new DataView(e.buffer, t, 8).getBigUint64(0, !0)), t += 8), r >= 16 && this.compressSize === 4294967295 && (this.compressSize = Number(new DataView(e.buffer, t, 8).getBigUint64(0, !0)), t += 8), r >= 24 && this.headerOffset === 4294967295 && (this.headerOffset = Number(new DataView(e.buffer, t, 8).getBigUint64(0, !0)), t += 8)) : t += r;
+		}
+	}
+}, Jt = document.querySelector("#output");
+document.querySelector("#load-zip-listing").addEventListener("click", () => {
+	let e = document.querySelector("#link-to-zip").value;
+	e ? Jt.textContent = "Loading ZIP listing..." : Jt.textContent = "Please enter a valid ZIP URL";
+	let t = new Kt(e);
+	t.getFileList().then((e) => {
+		Jt.innerHTML = "<ul>" + e.map((e) => `<li>${e} <button class="download-button" type="button" data-file="${e}">Download</button></li>`).join("\n") + "</ul>", document.querySelectorAll(".download-button").forEach((e) => {
+			e.addEventListener("click", async (e) => {
+				let n = e.target.getAttribute("data-file"), r = await t.getFileAsObjectURL(n), i = document.createElement("a");
+				i.href = r, i.download = n.split("/").pop() || n, i.click(), setTimeout(() => {
+					i.remove(), URL.revokeObjectURL(r);
+				}, 5e3);
+			});
+		});
+	});
+});
+//#endregion
