@@ -9,15 +9,17 @@ on:
 jobs:
     build_site:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
 
         name: Publish Example Website to GitHub Pages
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Setup Node
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
-                  node-version: 20
+                  node-version: 24
                   cache: 'npm'
 
             - name: Install dependencies
@@ -29,7 +31,7 @@ jobs:
               run: npm run build
 
             - name: Upload Build
-              uses: JamesIves/github-pages-deploy-action@v4.7.2
+              uses: JamesIves/github-pages-deploy-action@v4.9.0
               with:
                   folder: build # The folder the action should deploy.
                   branch: gh-pages # The branch the action should deploy to.
