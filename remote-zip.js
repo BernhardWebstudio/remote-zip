@@ -1167,11 +1167,13 @@ var Ht = {
 	".abw": "application/x-abiword",
 	".arc": "application/x-freearc",
 	".avi": "video/x-msvideo",
+	".avif": "image/avif",
 	".azw": "application/vnd.amazon.ebook",
 	".bin": "application/octet-stream",
 	".bmp": "image/bmp",
 	".bz": "application/x-bzip",
 	".bz2": "application/x-bzip2",
+	".cjs": "text/javascript",
 	".csh": "application/x-csh",
 	".css": "text/css",
 	".csv": "text/csv",
@@ -1188,13 +1190,15 @@ var Ht = {
 	".ico": "image/vnd.microsoft.icon",
 	".ics": "text/calendar",
 	".jar": "application/java-archive",
-	".jpeg": ".jpg",
+	".jpeg": "image/jpeg",
+	".jpg": "image/jpeg",
 	".js": "text/javascript",
 	".json": "application/json",
 	".jsonld": "application/ld+json",
-	".mid": ".midi",
+	".mid": "audio/midi",
 	".mjs": "text/javascript",
 	".mp3": "audio/mpeg",
+	".mp4": "video/mp4",
 	".mpeg": "video/mpeg",
 	".mpkg": "application/vnd.apple.installer+xml",
 	".mtl": "model/mtl",
@@ -1225,6 +1229,7 @@ var Ht = {
 	".ttf": "font/ttf",
 	".txt": "text/plain",
 	".vsd": "application/vnd.visio",
+	".wasm": "application/wasm",
 	".wav": "audio/wav",
 	".weba": "audio/webm",
 	".webm": "video/webm",
@@ -1234,102 +1239,207 @@ var Ht = {
 	".xhtml": "application/xhtml+xml",
 	".xls": "application/vnd.ms-excel",
 	".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-	".xml": "XML",
+	".xml": "application/xml",
 	".xul": "application/vnd.mozilla.xul+xml",
 	".zip": "application/zip"
 }, Ut = class {
 	url;
+	options;
 	zipSize = 0;
 	files = /* @__PURE__ */ new Map();
-	magic_eocd64 = new Uint8Array([
-		80,
-		75,
-		6,
-		6
-	]);
+	loaded = !1;
+	loadPromise = null;
 	magic_eocd = new Uint8Array([
 		80,
 		75,
 		5,
 		6
 	]);
-	constructor(e) {
-		this.url = e;
+	magic_eocd64 = new Uint8Array([
+		80,
+		75,
+		6,
+		6
+	]);
+	magic_eocd64_locator = new Uint8Array([
+		80,
+		75,
+		6,
+		7
+	]);
+	constructor(e, t = {}) {
+		this.url = e, this.options = {
+			strictCrc: t.strictCrc ?? !0,
+			debug: t.debug ?? !1,
+			headers: t.headers,
+			fetch: t.fetch,
+			signal: t.signal
+		};
 	}
 	async getRange(e, t) {
-		return await (await fetch(this.url, { headers: { Range: `bytes=${e}-${e + t - 1}` } })).arrayBuffer();
+		let n = this.options.fetch || globalThis.fetch, r = new Headers(this.options.headers);
+		r.set("Range", `bytes=${e}-${e + t - 1}`);
+		let i = await n(this.url, {
+			method: "GET",
+			headers: r,
+			signal: this.options.signal
+		});
+		if (!i.ok) throw Error(`Failed to fetch range: ${i.status} ${i.statusText}`);
+		let a = await i.arrayBuffer();
+		return i.status === 200 && (this.options.debug && console.warn("Server returned 200 OK instead of 206 Partial Content. Slicing requested range from response body."), a.byteLength > t) ? a.slice(e, e + t) : a;
 	}
 	async infoiter() {
-		let e = await fetch(this.url, { method: "HEAD" }), t = e.headers.get("Accept-Ranges") || "";
-		if (t !== "bytes") {
+		let e = this.options.fetch || globalThis.fetch, t = new Headers(this.options.headers), n = await e(this.url, {
+			method: "HEAD",
+			headers: t,
+			signal: this.options.signal
+		});
+		if (!n.ok) throw Error(`Failed to fetch zip metadata: ${n.status} ${n.statusText}`);
+		let r = n.headers.get("Accept-Ranges") || "";
+		if (r !== "bytes" && this.options.debug) {
 			let e = new URL(this.url).hostname;
-			console.warn(`${e} Accept-Ranges header ('${t}') is not 'bytes'--trying anyway`);
+			console.warn(`${e} Accept-Ranges header ('${r}') is not 'bytes'--trying anyway`);
 		}
-		this.zipSize = parseInt(e.headers.get("Content-Length") || "0");
-		let n = await this.getRange(Math.max(this.zipSize - 65536, 0), 65536), r = new Uint8Array(n), i = -1, a = 0, o = this.findLastIndex(r, this.magic_eocd64);
-		if (o >= 0) {
-			let e = new DataView(n);
-			a = Number(e.getBigUint64(o + 40, !0)), i = Number(e.getBigUint64(o + 48, !0));
-		} else if (o = this.findLastIndex(r, this.magic_eocd), o >= 0) {
-			let e = new DataView(n);
-			a = e.getUint32(o + 12, !0), i = e.getUint32(o + 16, !0);
+		if (this.zipSize = parseInt(n.headers.get("Content-Length") || "0", 10), !this.zipSize || this.zipSize <= 0) throw Error("Invalid or missing Content-Length header");
+		let i = Math.min(this.zipSize, 65536), a = this.zipSize - i, o = await this.getRange(a, i), s = new Uint8Array(o), c = -1, l = 0, u = this.findLastIndex(s, this.magic_eocd);
+		if (u >= 0) {
+			let e = new DataView(o, u);
+			l = e.getUint32(12, !0), c = e.getUint32(16, !0);
+			let t = e.getUint16(10, !0);
+			if (c === 4294967295 || l === 4294967295 || t === 65535) {
+				let e = !1, t = -1;
+				if (u >= 20 && s[u - 20] === 80 && s[u - 19] === 75 && s[u - 18] === 6 && s[u - 17] === 7 && (t = u - 20), t < 0 && (t = this.findLastIndex(s.subarray(0, u), this.magic_eocd64_locator)), t >= 0) {
+					let n = new DataView(o, t), r = Number(n.getBigUint64(8, !0));
+					if (r >= a && r + 56 <= this.zipSize) {
+						let t = new DataView(o, r - a);
+						t.getUint32(0, !0) === 101075792 && (l = Number(t.getBigUint64(40, !0)), c = Number(t.getBigUint64(48, !0)), e = !0);
+					} else if (r >= 0 && r + 56 <= this.zipSize) {
+						let t = await this.getRange(r, 56), n = new DataView(t);
+						n.getUint32(0, !0) === 101075792 && (l = Number(n.getBigUint64(40, !0)), c = Number(n.getBigUint64(48, !0)), e = !0);
+					}
+				}
+				if (!e) {
+					let e = this.findLastIndex(s, this.magic_eocd64);
+					if (e >= 0 && e + 56 <= s.length) {
+						let t = new DataView(o, e);
+						t.getUint32(0, !0) === 101075792 && (l = Number(t.getBigUint64(40, !0)), c = Number(t.getBigUint64(48, !0)));
+					}
+				}
+			}
+		} else {
+			let e = this.findLastIndex(s, this.magic_eocd64);
+			if (e >= 0 && e + 56 <= s.length) {
+				let t = new DataView(o, e);
+				t.getUint32(0, !0) === 101075792 && (l = Number(t.getBigUint64(40, !0)), c = Number(t.getBigUint64(48, !0)));
+			}
 		}
-		if (i < 0 || i >= this.zipSize) throw Error("Cannot find central directory");
-		n = await this.getRange(i, a), r = new Uint8Array(n);
-		let s = [], c = 0;
-		for (; c < a;) {
-			let e = new DataView(n, c), t = e.getUint16(10, !0), i = e.getUint32(12, !0), a = e.getUint32(20, !0), o = e.getUint32(24, !0), l = e.getUint16(28, !0), u = e.getUint16(30, !0), d = e.getUint16(32, !0), f = e.getUint32(42, !0), p = e.getUint32(16, !0);
-			c += 46;
-			let m = new TextDecoder().decode(r.slice(c, c + l));
-			c += l;
-			let h = r.slice(c, c + u);
-			c += u, c += d;
-			let g = new Wt(m, i, f, t, a, o, p);
-			g.parseExtra(h), s.push(g);
+		if (c < 0 || c > this.zipSize || l < 0 || c + l > this.zipSize) throw Error("Cannot find central directory");
+		if (l === 0) return [];
+		o = await this.getRange(c, l), s = new Uint8Array(o);
+		let d = [], f = 0;
+		for (; f + 46 <= l;) {
+			let e = new DataView(o, f);
+			if (e.getUint32(0, !0) !== 33639248) break;
+			let t = e.getUint16(10, !0), n = e.getUint32(12, !0), r = e.getUint32(16, !0), i = e.getUint32(20, !0), a = e.getUint32(24, !0), c = e.getUint16(28, !0), u = e.getUint16(30, !0), p = e.getUint16(32, !0), m = e.getUint32(42, !0);
+			if (f += 46, f + c > l) break;
+			let h = new TextDecoder().decode(s.subarray(f, f + c));
+			if (f += c, f + u > l) break;
+			let g = s.subarray(f, f + u);
+			f += u, f += p;
+			let _ = new Wt(h, n, m, t, i, a, r);
+			_.parseExtra(g), d.push(_);
 		}
-		return s;
+		return d;
 	}
 	findLastIndex(e, t) {
-		for (let n = e.length - t.length; n >= 0; n--) if (t.every((t, r) => t === e[n + r])) return n;
+		for (let n = e.length - t.length; n >= 0; n--) {
+			let r = !0;
+			for (let i = 0; i < t.length; i++) if (e[n + i] !== t[i]) {
+				r = !1;
+				break;
+			}
+			if (r) return n;
+		}
 		return -1;
 	}
+	async ensureLoaded() {
+		this.loaded || (this.loadPromise ||= (async () => {
+			let e = await this.infoiter();
+			this.files = new Map(e.map((e) => [e.filename, e])), this.loaded = !0;
+		})(), await this.loadPromise);
+	}
 	async getFileList() {
-		let e = await this.infoiter();
-		return this.files = new Map(e.map((e) => [e.filename, e])), Array.from(this.files.keys());
+		return await this.ensureLoaded(), Array.from(this.files.keys());
+	}
+	async getEntries() {
+		return await this.ensureLoaded(), Array.from(this.files.values()).map((e) => e.toEntry());
+	}
+	async getEntry(e) {
+		await this.ensureLoaded();
+		let t = this.files.get(e);
+		return t ? t.toEntry() : void 0;
+	}
+	async hasFile(e) {
+		return await this.ensureLoaded(), this.files.has(e);
+	}
+	async getFile(e) {
+		await this.ensureLoaded();
+		let t = this.files.get(e);
+		if (!t) throw Error(`File not found: ${e}`);
+		this.options.debug && console.log("File info:", t);
+		let n = await this.getRange(t.headerOffset, 30), r = new DataView(n), i = r.getUint32(0, !0);
+		if (i !== 67324752) throw Error("Invalid local file header signature");
+		let a = r.getUint16(26, !0), o = r.getUint16(28, !0);
+		this.options.debug && console.log("Local header info:", {
+			signature: i.toString(16),
+			filenameLength: a,
+			extraFieldLength: o
+		});
+		let s = t.headerOffset + 30 + a + o;
+		this.options.debug && console.log("File data offset:", s);
+		let c;
+		if (t.compressSize === 0) c = /* @__PURE__ */ new Uint8Array();
+		else {
+			let e = await this.getRange(s, t.compressSize);
+			if (this.options.debug && console.log("Compressed data size:", e.byteLength), t.compressType === 0) c = new Uint8Array(e);
+			else if (t.compressType === 8) try {
+				c = It(new Uint8Array(e));
+			} catch (t) {
+				throw this.options.debug && (console.error("Decompression error:", t), console.error("Compressed data (first 50 bytes):", new Uint8Array(e).slice(0, 50))), Error("Failed to decompress file data");
+			}
+			else throw Error(`Unsupported compression method: ${t.compressType}`);
+		}
+		if (this.options.debug && console.log("Decompressed data size:", c.length), c.length !== t.fileSize) {
+			let e = `Decompressed size (${c.length}) doesn't match expected size (${t.fileSize})`;
+			if (this.options.strictCrc) throw Error(e);
+			this.options.debug && console.warn(e);
+		}
+		let l = this.calculateCRC32(c), u = t.crc32 >>> 0;
+		if (l !== u) {
+			let e = `Calculated CRC32 (${l}) doesn't match expected CRC32 (${u})`;
+			if (this.options.strictCrc) throw Error(e);
+			this.options.debug && console.warn(e);
+		}
+		return c;
+	}
+	async getFileAsText(e, t = "utf-8") {
+		let n = await this.getFile(e);
+		return new TextDecoder(t).decode(n);
+	}
+	async getFileAsBlob(e, t = "") {
+		let n = await this.getFile(e);
+		if (!t) {
+			let n = "." + (e.split(".").pop() || "").toLowerCase();
+			n in Ht && (t = Ht[n]);
+		}
+		return new Blob([n], { type: t || "application/octet-stream" });
 	}
 	async getFileAsObjectURL(e, t = "") {
-		let n = this.files.get(e);
-		if (!n) throw Error(`File not found: ${e}`);
-		let r = "." + (e.split(".").pop() || "").toLowerCase();
-		r in Ht && t == "" && (t = Ht[r]), console.log("File info:", n);
-		let i = await this.getRange(n.headerOffset, 30 + n.filename.length + 2), a = new DataView(i), o = a.getUint32(0, !0);
-		if (o !== 67324752) throw Error("Invalid local file header signature");
-		let s = a.getUint16(26, !0), c = a.getUint16(28, !0);
-		console.log("Local header info:", {
-			signature: o.toString(16),
-			filenameLength: s,
-			extraFieldLength: c
-		});
-		let l = n.headerOffset + 30 + s + c;
-		console.log("File data offset:", l);
-		let u = await this.getRange(l, n.compressSize);
-		console.log("Compressed data size:", u.byteLength);
-		let d;
-		if (n.compressType === 0) d = new Uint8Array(u);
-		else if (n.compressType === 8) try {
-			d = It(new Uint8Array(u));
-		} catch (e) {
-			throw console.error("Decompression error:", e), console.error("Compressed data (first 50 bytes):", new Uint8Array(u).slice(0, 50)), Error("Failed to decompress file data");
-		}
-		else throw Error(`Unsupported compression method: ${n.compressType}`);
-		console.log("Decompressed data size:", d.length), d.length !== n.fileSize && console.warn(`Decompressed size (${d.length}) doesn't match expected size (${n.fileSize})`);
-		let f = this.calculateCRC32(d);
-		f !== n.crc32 && console.warn(`Calculated CRC32 (${f}) doesn't match expected CRC32 (${n.crc32})`);
-		let p = new Blob([d], { type: t || "application/octet-stream" });
-		return URL.createObjectURL(p);
+		let n = await this.getFileAsBlob(e, t);
+		return URL.createObjectURL(n);
 	}
 	calculateCRC32(e) {
-		return Vt(e);
+		return Vt(e) >>> 0;
 	}
 }, Wt = class {
 	filename;
@@ -1343,11 +1453,29 @@ var Ht = {
 		this.filename = e, this.dateTime = t, this.headerOffset = n, this.compressType = r, this.compressSize = i, this.fileSize = a, this.crc32 = o;
 	}
 	parseExtra(e) {
-		let t = 0;
-		for (; t < e.length;) {
-			let n = e[t + 1] << 8 | e[t], r = e[t + 3] << 8 | e[t + 2];
-			t += 4, n === 1 ? (r >= 8 && this.fileSize === 4294967295 && (this.fileSize = Number(new DataView(e.buffer, t, 8).getBigUint64(0, !0)), t += 8), r >= 16 && this.compressSize === 4294967295 && (this.compressSize = Number(new DataView(e.buffer, t, 8).getBigUint64(0, !0)), t += 8), r >= 24 && this.headerOffset === 4294967295 && (this.headerOffset = Number(new DataView(e.buffer, t, 8).getBigUint64(0, !0)), t += 8)) : t += r;
+		let t = 0, n = new DataView(e.buffer, e.byteOffset, e.byteLength);
+		for (; t + 4 <= e.length;) {
+			let r = n.getUint16(t, !0), i = n.getUint16(t + 2, !0), a = t + 4 + i;
+			if (a > e.length) break;
+			if (r === 1) {
+				let e = t + 4;
+				this.fileSize === 4294967295 && e + 8 <= a && (this.fileSize = Number(n.getBigUint64(e, !0)), e += 8), this.compressSize === 4294967295 && e + 8 <= a && (this.compressSize = Number(n.getBigUint64(e, !0)), e += 8), this.headerOffset === 4294967295 && e + 8 <= a && (this.headerOffset = Number(n.getBigUint64(e, !0)), e += 8);
+			}
+			t = a;
 		}
+	}
+	toEntry() {
+		let e = this.dateTime & 65535, t = this.dateTime >>> 16 & 65535, n = (e & 31) * 2, r = e >>> 5 & 63, i = e >>> 11 & 31, a = Math.max(1, t & 31), o = Math.max(0, (t >>> 5 & 15) - 1), s = (t >>> 9 & 127) + 1980;
+		return {
+			filename: this.filename,
+			dateTime: new Date(s, o, a, i, r, n),
+			headerOffset: this.headerOffset,
+			compressType: this.compressType,
+			compressSize: this.compressSize,
+			fileSize: this.fileSize,
+			crc32: this.crc32,
+			isDirectory: this.filename.endsWith("/")
+		};
 	}
 }, Gt = document.querySelector("#output");
 document.querySelector("#load-zip-listing").addEventListener("click", () => {
