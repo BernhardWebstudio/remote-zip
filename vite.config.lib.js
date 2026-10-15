@@ -8,7 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   build: {
     lib: {
-      entry: resolve(__dirname, "lib/remote-zip.js"),
+      entry: resolve(__dirname, "lib/remote-zip.ts"),
       name: "RemoteZip",
       // the proper extensions will be added
       fileName: "remote-zip",
@@ -18,6 +18,7 @@ export default defineConfig({
       // into your library
       external: [""],
       output: {
+        exports: "named",
         // Provide global variables to use in the UMD build
         // for externalized deps
         globals: {},
