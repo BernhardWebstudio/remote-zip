@@ -1,4 +1,4 @@
-//#region \0vite/modulepreload-polyfill.js
+// \0vite/modulepreload-polyfill.js
 (function() {
 	let e = document.createElement("link").relList;
 	if (e && e.supports && e.supports("modulepreload")) return;
@@ -20,8 +20,7 @@
 		fetch(e.href, n);
 	}
 })();
-//#endregion
-//#region node_modules/pako/dist/pako.mjs
+// node_modules/pako/dist/pako.mjs
 var e = 4, t = 0, n = 1, r = 2;
 function i(e) {
 	let t = e.length;
@@ -244,18 +243,23 @@ var D = (e) => e < 256 ? C[e] : C[256 + (e >>> 7)], O = (e, t) => {
 		i %= 65521, a %= 65521;
 	}
 	return i | a << 16;
-}, he = new Uint32Array((() => {
-	let e, t = [];
-	for (var n = 0; n < 256; n++) {
-		e = n;
-		for (var r = 0; r < 8; r++) e = e & 1 ? 3988292384 ^ e >>> 1 : e >>> 1;
-		t[n] = e;
+}, he = (() => {
+	let e = /* @__PURE__ */ new Uint32Array(2048), t;
+	for (let n = 0; n < 256; n++) {
+		t = n;
+		for (let e = 0; e < 8; e++) t = t & 1 ? 3988292384 ^ t >>> 1 : t >>> 1;
+		e[n] = t;
 	}
-	return t;
-})()), P = (e, t, n, r) => {
-	let i = he, a = r + n;
+	for (let n = 0; n < 256; n++) {
+		t = e[n];
+		for (let r = 256; r < 2048; r += 256) t = e[t & 255] ^ t >>> 8, e[r + n] = t;
+	}
+	return e;
+})(), P = (e, t, n, r) => {
+	let i = he, a = r + n, o = r;
 	e ^= -1;
-	for (let n = r; n < a; n++) e = e >>> 8 ^ i[(e ^ t[n]) & 255];
+	for (let n = a - 7; o < n; o += 8) e ^= t[o] | t[o + 1] << 8 | t[o + 2] << 16 | t[o + 3] << 24, e = i[1792 + (e & 255)] ^ i[1536 + (e >>> 8 & 255)] ^ i[1280 + (e >>> 16 & 255)] ^ i[1024 + (e >>> 24)] ^ i[768 + t[o + 4]] ^ i[512 + t[o + 5]] ^ i[256 + t[o + 6]] ^ i[t[o + 7]];
+	for (; o < a; o++) e = e >>> 8 ^ i[(e ^ t[o]) & 255];
 	return e ^ -1;
 }, ge = {
 	2: "need dictionary",
@@ -746,7 +750,7 @@ var U = 15, je = 852, Me = 592, Ne = 0, Pe = 1, Fe = 2, Ie = new Uint16Array([
 				if (s === 0) break inf_leave;
 				p = 0;
 				do
-					C = r[a + p++], n.head && C && n.length < 65536 && (n.head.name += String.fromCharCode(C));
+					C = r[a + p++], n.head && C && n.length < 65536 && (n.head.name += String.fromCharCode(C), n.length++);
 				while (C && p < s);
 				if (n.flags & 512 && n.wrap & 4 && (n.check = P(n.check, r, p, a)), s -= p, a += p, C) break inf_leave;
 			} else n.head && (n.head.name = null);
@@ -756,7 +760,7 @@ var U = 15, je = 852, Me = 592, Ne = 0, Pe = 1, Fe = 2, Ie = new Uint16Array([
 				if (s === 0) break inf_leave;
 				p = 0;
 				do
-					C = r[a + p++], n.head && C && n.length < 65536 && (n.head.comment += String.fromCharCode(C));
+					C = r[a + p++], n.head && C && n.length < 65536 && (n.head.comment += String.fromCharCode(C), n.length++);
 				while (C && p < s);
 				if (n.flags & 512 && n.wrap & 4 && (n.check = P(n.check, r, p, a)), s -= p, a += p, C) break inf_leave;
 			} else n.head && (n.head.comment = null);
@@ -1116,8 +1120,7 @@ function It(e, t = {}) {
 		raw: !0
 	});
 }
-//#endregion
-//#region node_modules/@foxglove/crc/dist/esm/src/index.js
+// node_modules/@foxglove/crc/dist/esm/src/index.js
 function Lt({ polynomial: e, numTables: t }) {
 	let n = new Uint32Array(256 * t);
 	for (let t = 0; t < 256; t++) {
@@ -1157,8 +1160,7 @@ function Bt(e) {
 function Vt(e) {
 	return Bt(zt(Rt(), e));
 }
-//#endregion
-//#region lib/mime-types.ts
+// lib/mime-types.ts
 var Ht = {
 	".3g2": "video/3gpp2",
 	".3gp": "video/3gpp",
@@ -1493,4 +1495,3 @@ document.querySelector("#load-zip-listing").addEventListener("click", () => {
 		});
 	});
 });
-//#endregion
